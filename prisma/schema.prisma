@@ -1,0 +1,244 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  MANAGER
+  TENANT
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  DENIED
+  WITHDRAWN
+}
+
+enum LeaseStatus {
+  DRAFT
+  ACTIVE
+  TERMINATED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+model User {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String
+  name       String?
+  phone      String?
+  role       Role     @default(TENANT)
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // relations
+  profile       Profile?
+  managedProps  Property[]     @relation("PropertyManager")
+  applications  Application[]
+  leases        Lease[]        @relation("TenantLeases")
+  payments      Payment[]
+  documents     Document[]
+  notifications Notification[]
+
+  // optional fine-grained scopes/permissions
+  scopes       Json? // e.g. ["properties.create","applications.approve"]
+  AuditLog     AuditLog[]
+  RefreshToken RefreshToken[]
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String
+  revoked   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
+
+  @@index([userId])
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio       String?
+  photoUrl  String?
+  address   Json? // structured address (street, city, region, country)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Property {
+  id          String   @id @default(uuid())
+  managerId   String? // which manager owns this property (nullable)
+  manager     User?    @relation("PropertyManager", fields: [managerId], references: [id], onDelete: SetNull)
+  title       String
+  description String?
+  address     Json // structured address JSON (street/city/lat/lon etc)
+  amenities   Json? // e.g. ["water","parking"]
+  status      String   @default("ACTIVE") // ACTIVE, ARCHIVED, UNDER_MAINTENANCE ...
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // relations
+  units Unit[]
+
+  // indexes
+  @@index([status])
+  @@index([title])
+}
+
+model Unit {
+  id            String   @id @default(uuid())
+  propertyId    String
+  property      Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  unitNumber    String? // e.g. "A1", "Room 2"
+  name          String? // optional human name
+  sizeSqm       Int? // size in sqm
+  rentAmount    Decimal  @db.Decimal(12, 2)
+  depositAmount Decimal  @db.Decimal(12, 2)
+  currency      String   @default("GHS")
+  availability  String   @default("AVAILABLE") // AVAILABLE, OCCUPIED, RESERVED
+  images        Json? // list of image URLs / Cloudinary IDs
+  metadata      Json? // flexible extra fields
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // relations
+  applications Application[]
+  leases       Lease[]
+  Payment      Payment[]
+
+  @@index([propertyId])
+  @@index([availability])
+}
+
+model Application {
+  id          String            @id @default(uuid())
+  unitId      String
+  unit        Unit              @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  tenantId    String
+  tenant      User              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  status      ApplicationStatus @default(PENDING)
+  message     String?
+  attachments Json? // uploaded docs (IDs / URLs)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // if approved, we might link to a lease
+  lease   Lease?
+  leaseId String?
+
+  @@index([tenantId])
+  @@index([unitId])
+  @@index([status])
+}
+
+model Lease {
+  id            String       @id @default(uuid())
+  tenantId      String
+  tenant        User         @relation("TenantLeases", fields: [tenantId], references: [id], onDelete: Cascade)
+  unitId        String
+  unit          Unit         @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  applicationId String?      @unique
+  application   Application? @relation(fields: [applicationId], references: [id])
+  startDate     DateTime
+  endDate       DateTime?
+  rentAmount    Decimal      @db.Decimal(12, 2)
+  depositPaid   Boolean      @default(false)
+  status        LeaseStatus  @default(DRAFT)
+  terms         String? // actual lease text or link to signed doc
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  payments Payment[]
+
+  @@index([tenantId])
+  @@index([unitId])
+  @@index([status])
+}
+
+model Payment {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  leaseId     String? // optional: payment tied to a lease
+  lease       Lease?        @relation(fields: [leaseId], references: [id], onDelete: SetNull)
+  unitId      String? // optional direct reference to a unit
+  unit        Unit?         @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  provider    String // "paystack", "stripe", etc
+  providerRef String        @unique // provider's transaction reference
+  amount      Decimal       @db.Decimal(12, 2)
+  currency    String        @default("GHS")
+  status      PaymentStatus @default(PENDING)
+  metadata    Json? // store provider payload, receipts, etc
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([leaseId])
+  @@index([status])
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  url       String
+  type      String? // e.g., "id_card", "lease_pdf", "gov_form"
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String // e.g., "APPLICATION_UPDATE", "PAYMENT_RECEIPT"
+  payload   Json
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([read])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action    String // e.g., "APPLICATION_APPROVED", "LETS_CREATED"
+  target    String? // e.g., "Application:uuid" or "Lease:uuid"
+  payload   Json?
+  createdAt DateTime @default(now())
+
+  @@index([actorId])
+  @@index([action])
+}
