@@ -7,7 +7,7 @@ import authRoutes from "./auth.route.js";
 const router = Router();
 function routes(app) {
     app.use('/api/auth', authRoutes);
-    app.use('/api/user');
+    // app.use('/api/user',);
     // app.use('/api/super-admin', superAdminRoutes);
     // app.use('/api/properties', propertyRoutes);
     // app.use('/api/paystack', paystackRoutes);

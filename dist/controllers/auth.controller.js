@@ -8,6 +8,30 @@ export async function registerHandler(req, res) {
         return res.status(400).json({ error: err.message });
     }
 }
+export async function verifyEmailHandler(req, res) {
+    try {
+        const token = req.query.token; // token from query param ?token=<token>
+        if (!token || typeof token !== "string") {
+            return res.status(400).json({
+                success: false,
+                message: "Token is required"
+            });
+        }
+        const { success, accessToken, refreshToken } = await authService.verifyEmail(token);
+        return res.status(200).json({
+            success,
+            message: "Email verified successfully",
+            accessToken,
+            refreshToken
+        });
+    }
+    catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.message || "Email verification failed"
+        });
+    }
+}
 export async function loginHandler(req, res) {
     try {
         const { user, accessToken, refreshToken } = await authService.loginService(req.body);
@@ -30,13 +54,45 @@ export async function refreshHandler(req, res) {
 export async function logoutHandler(req, res) {
     try {
         const { refreshToken } = req.body;
-        await authService.logoutService({ refreshToken });
-        return res.json({ success: true });
+        await authService.logoutService(refreshToken);
+        return res.status(200).json({ success: true, accessToken: null });
     }
     catch (err) {
         return res.status(400).json({ error: err.message });
     }
 }
+export const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        await authService.generateResetCode(email);
+        return res.status(200).json({
+            success: true,
+            message: "Reset code sent successfully"
+        });
+    }
+    catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.message || "Error sending reset code"
+        });
+    }
+};
+export const resetPassword = async (req, res) => {
+    try {
+        const { email, resetTokenCode, newPassword } = req.body;
+        await authService.resetPassword(email, resetTokenCode, newPassword);
+        return res.status(200).json({
+            success: true,
+            message: "Password reset successfully"
+        });
+    }
+    catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.message || "Error resetting password"
+        });
+    }
+};
 // export const createHandler = async (req: CreateHandlerRequest, res: Response) => {
 //     try {
 //         const { user, token } = await createUser(req.body);

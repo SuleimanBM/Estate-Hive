@@ -1,9 +1,9 @@
-import Admin from "../src/models/admin.model.js";
-import User from "../src/models/user.model.js";
-import landModel from "../src/models/land.model.js";
-import buildingModel from "../src/models/building.model.js";
-import transactionModel from "../src/models/transaction.model.js";
-import superAdmin from "../src/models/super.admin.model.js";
+import Admin from "../models/admin.model.js";
+import User from "../models/user.model.js";
+import landModel from "../models/land.model.js";
+import buildingModel from "../models/building.model.js";
+import transactionModel from "../models/transaction.model.js";
+import superAdmin from "../models/super.admin.model.js";
 export const createSuperAdmin = async (req, res) => {
     const { name, email, password } = req.body;
     try {

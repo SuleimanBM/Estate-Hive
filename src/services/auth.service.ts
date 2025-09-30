@@ -5,6 +5,7 @@ import { stringify } from 'querystring';
 import { sendEmail } from 'utils/email.js';
 import {generateVerificationToken, verifyVerificationToken} from 'utils/verificationToken.js';
 import { hmacProcess } from 'utils/hmac.js';
+import { JwtPayload } from 'jsonwebtoken';
 
 
 const prisma = new PrismaClient();
@@ -33,6 +34,7 @@ export async function registerService({ name, email, password, phone }: { name: 
     </a>
     <p>Or copy and paste this link in your browser:</p>
     <p>${process.env.APP_URL}/verify-email?token=${token}</p>
+    <p>This link expires in 5 minutes</p>
   </div>
 `;
 
@@ -63,8 +65,9 @@ export async function verifyEmail(token: string) {
                 where:{id: decoded.userId},
                 data: {isVerified: true},
             })
-
-            return { success: true };
+            const accessToken = signAccessToken({ sub: user.id, role: user.role });
+            const refreshToken = signRefreshToken({ sub: user.id });
+            return { success: true, accessToken, refreshToken };
         } catch (error) {
             throw new Error("Invalid or expired token");
         }
@@ -125,9 +128,12 @@ export async function reIssueAccessToken({ refreshToken }: { refreshToken: strin
 }
 
 export async function logoutService(refreshToken: any) { 
-    await prisma.refreshToken.delete({
+    const {decoded} = verifyRefreshToken(refreshToken);
+    const userId = (decoded as JwtPayload).userId;
+    await prisma.refreshToken.deleteMany({
         where: {
-            token: refreshToken,
+            userId: userId,
+            //token: refreshToken,
         } as Prisma.RefreshTokenWhereUniqueInput,
     });
 }
@@ -147,7 +153,7 @@ export async function generateResetCode(email: string) {
     <p>We received a request to reset your password. Your reset code is:
     <strong>${resetTokenCode}</strong></p>
     <p>This code is valid for 10 minutes. If you did not request a password reset, please ignore this email.</p>
-    <p>Thank you,<br>estateHuve</p>
+    <p>Thank you,<br>estateHive</p>
   `;
     
     const info = await sendEmail(existingUser.email, "Password Reset code", " " , htmlContent)
@@ -155,6 +161,15 @@ export async function generateResetCode(email: string) {
 
     if (info.response && info.response.includes("OK")) {
         const hashedCode = hmacProcess(resetTokenCode, process.env.HMAC_SECRET_CODE!);
+        await prisma.user.update({
+            where: {
+                email
+            },
+            data: {
+                resetTokenCode: hashedCode,
+                resetTokenExpiry: new Date(Date.now() + 10 * 60 * 1000)
+            }
+        })
         // existingUser.resetTokenCode = hashedCode;
         // existingUser.resetTokenExpiry = new Date(Date.now() + 10 * 60 * 1000);
         // await existingUser.save();
@@ -165,7 +180,7 @@ export async function generateResetCode(email: string) {
 
 
 export async function resetPassword(email: string, resetTokenCode: string, newPassword: string) {
-    const existingUser = await prisma.user.findUnique({where: {email} }).select("+resetTokenCode +resetTokenExpiry");
+    const existingUser = await prisma.user.findUnique({where: {email} });
     if (!existingUser) {
         throw new Error("User not found");
     }
@@ -183,10 +198,20 @@ export async function resetPassword(email: string, resetTokenCode: string, newPa
         throw new Error("Invalid reset code");
     }
 
-    existingUser.password = await hashPassword(newPassword);
-    existingUser.resetTokenCode = undefined;
-    existingUser.resetTokenExpiry = undefined;
-    await existingUser.save();
+    const hashedPassword= await hashPassword(newPassword);
+    await prisma.user.update({
+        where: {
+            email,
+        },
+        data: {
+            password: hashedPassword,
+            resetTokenCode: null,
+            resetTokenExpiry: null,
+        }
+    })
+    // existingUser.resetTokenCode = undefined;
+    // existingUser.resetTokenExpiry = undefined;
+    // await existingUser.save();
 
     return true;
 }

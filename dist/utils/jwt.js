@@ -34,10 +34,28 @@ if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
     throw new Error('JWT secrets must be defined in environment variables');
 }
 export function signAccessToken(payload) {
-    return jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRES_IN });
+    const expiresIn = "15m";
+    // FIX: Initialize options as an empty object and conditionally assign properties.
+    // This avoids the type conflict caused by the conditional spread operator.
+    const options = {};
+    if (expiresIn) {
+        options.expiresIn = expiresIn;
+    }
+    return jwt.sign(payload, ACCESS_TOKEN_SECRET, options);
 }
+/**
+ * Signs a new Refresh Token. ExpiresIn is only included if the value is defined.
+ * @param payload The JWT claims payload.
+ * @returns The signed JWT string.
+ */
 export function signRefreshToken(payload) {
-    return jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRES_IN });
+    const expiresIn = "1h";
+    // FIX: Initialize options as an empty object and conditionally assign properties.
+    const options = {};
+    if (expiresIn) {
+        options.expiresIn = expiresIn;
+    }
+    return jwt.sign(payload, REFRESH_TOKEN_SECRET, options);
 }
 export function verifyAccessToken(token) {
     try {

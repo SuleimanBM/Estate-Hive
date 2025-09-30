@@ -11,6 +11,8 @@ import multer from "multer";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
+import helmet from "helmet"
+import cors from "cors"
 
 // Load environment variables
 dotenv.config();
@@ -26,6 +28,12 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(helmet())
+app.use(cors({
+    origin: "*",
+    methods: ["GET", "PUT", "POST",],
+    credentials: true
+}))
 
 // Static files
 app.use(
@@ -57,7 +65,7 @@ connectToDB();
 routes(app);
 
 //Health check endpoint
-app.get('/health', (req: Request, res: Response) => {
+app.put('/health', (req: Request, res: Response) => {
     res.status(200).json({
         status: 'OK',
         timestamp: new Date().toISOString(),

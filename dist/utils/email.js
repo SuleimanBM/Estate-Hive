@@ -1,20 +1,21 @@
 import nodemailer from 'nodemailer';
-export async function sendVerificationEmail(email, token) {
+export async function sendEmail(email, subject, message, html) {
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: Number(process.env.SMTP_PORT || 587),
-        secure: false,
+        secure: true,
         auth: {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASS,
         },
     });
-    const url = `${process.env.APP_URL}/verify-email?token=${token}`;
-    await transporter.sendMail({
+    const send = await transporter.sendMail({
         from: process.env.SMTP_FROM,
         to: email,
-        subject: 'Verify your email',
-        html: `<p>Please verify your email by clicking <a href="${url}">here</a></p>`,
+        subject: subject,
+        text: message,
+        html: html,
     });
+    return send;
 }
 //# sourceMappingURL=email.js.map

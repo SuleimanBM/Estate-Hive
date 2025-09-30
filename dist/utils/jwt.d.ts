@@ -9,24 +9,21 @@ export interface VerifyJwtResult {
 }
 export declare function signJwt(userId: string): string;
 export declare function verifyJwt(token: string): VerifyJwtResult;
-export declare function signAccessToken(payload: object): never;
-export declare function signRefreshToken(payload: object): never;
+export declare function signAccessToken(payload: object): string;
+/**
+ * Signs a new Refresh Token. ExpiresIn is only included if the value is defined.
+ * @param payload The JWT claims payload.
+ * @returns The signed JWT string.
+ */
+export declare function signRefreshToken(payload: object): string;
 export declare function verifyAccessToken(token: string): {
     valid: boolean;
     expired: boolean;
     decoded: string | jwt.JwtPayload;
-} | {
-    valid: boolean;
-    expired: boolean;
-    decoded: null;
 };
 export declare function verifyRefreshToken(token: string): {
     valid: boolean;
     expired: boolean;
     decoded: string | jwt.JwtPayload;
-} | {
-    valid: boolean;
-    expired: boolean;
-    decoded: null;
 };
 //# sourceMappingURL=jwt.d.ts.map

@@ -1,8 +1,8 @@
-import { verifyAccessToken } from '../utils/jwt';
+import { verifyAccessToken } from '../utils/jwt.js';
 import { PrismaClient } from '@prisma/client';
-import { reIssueAccessToken } from "../services/auth.service";
+import { reIssueAccessToken } from "../services/auth.service.js";
 const prisma = new PrismaClient();
-export async function authMiddleware(req, res, next) {
+export async function requireAuth(req, res, next) {
     // Get tokens from headers without lodash
     const authHeader = req.headers.authorization || '';
     const accessToken = authHeader.replace(/^Bearer\s/, '');
@@ -25,9 +25,10 @@ export async function authMiddleware(req, res, next) {
     }
     if (result.expired && refreshToken) {
         try {
-            const newAccessToken = await reIssueAccessToken({ refreshToken });
+            const { newAccessToken, newRefreshToken } = await reIssueAccessToken({ refreshToken });
             if (newAccessToken) {
                 res.setHeader('x-access-token', newAccessToken);
+                res.setHeader('x-refresh-token', newRefreshToken);
                 const newResult = verifyAccessToken(newAccessToken);
                 if (newResult.valid && newResult.decoded &&
                     typeof newResult.decoded === 'object' &&
@@ -38,6 +39,7 @@ export async function authMiddleware(req, res, next) {
                     if (user) {
                         req.user = user;
                     }
+                    return next();
                 }
             }
         }
@@ -46,11 +48,16 @@ export async function authMiddleware(req, res, next) {
         }
     }
 }
+// export const requireRole = (...allowed: Role[]) => (req: Request, res: Response, next: NextFunction) => {
+//     if (!req.user) return res.status(401).json({ error: 'Unauthenticated' });
+//     if (allowed.includes(req.user.role)) return next();
+//     return res.status(403).json({ error: 'Forbidden' });
+// };
 export const requireRole = (...allowed) => (req, res, next) => {
     if (!req.user)
-        return res.status(401).json({ error: 'Unauthenticated' });
+        return res.status(401).json({ error: "Unauthenticated" });
     if (allowed.includes(req.user.role))
         return next();
-    return res.status(403).json({ error: 'Forbidden' });
+    return res.status(403).json({ error: "Forbidden" });
 };
 //# sourceMappingURL=auth.middleware.js.map

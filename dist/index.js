@@ -1,4 +1,9 @@
 import express from "express";
+// import adminRoutes from "./routes/admin.route.js";
+// import userRoutes from "./routes/auth.route.js";
+// import superAdminRoutes from "./routes/super.admin.routes.js";
+// import propertyRoutes from "./routes/property.route.js";
+// import paystackRoutes from "./routes/paystack.routes.js";
 import routes from "./routes/index.js";
 import dotenv from "dotenv";
 import { connectToDB } from "./config/mongodb.js";
@@ -6,6 +11,8 @@ import multer from "multer";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
+import helmet from "helmet";
+import cors from "cors";
 // Load environment variables
 dotenv.config();
 const port = process.env.PORT || 3000;
@@ -17,6 +24,12 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(helmet());
+app.use(cors({
+    origin: "*",
+    methods: ["GET", "PUT", "POST",],
+    credentials: true
+}));
 // Static files
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 // Multer configuration
@@ -38,8 +51,8 @@ const upload = multer({
 connectToDB();
 // Routes
 routes(app);
-// Health check endpoint
-app.get('/health', (req, res) => {
+//Health check endpoint
+app.put('/health', (req, res) => {
     res.status(200).json({
         status: 'OK',
         timestamp: new Date().toISOString(),
@@ -47,12 +60,12 @@ app.get('/health', (req, res) => {
     });
 });
 // 404 handler
-app.use('*', (req, res) => {
-    res.status(404).json({
-        success: false,
-        message: `Route ${req.originalUrl} not found`
-    });
-});
+// app.use('/*', (req: Request, res: Response) => {
+//     res.status(404).json({
+//         success: false,
+//         message: `Route ${req.originalUrl} not found`
+//     });
+// });
 // Global error handler
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);

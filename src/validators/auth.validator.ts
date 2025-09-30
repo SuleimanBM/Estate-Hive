@@ -1,34 +1,37 @@
-import { z } from 'zod';
+import { object,string,z } from 'zod';
 
 
-export const registerSchema = z.object({
-    name: z.string().min(2),
-    email: z.string().email(),
-    password: z.string().min(8),
-    phone: z.string().optional(),
-});
+export const registerSchema = object({
+    body: object({
+    name: string().min(2),
+    email: string().email(),
+    password: string().min(8),
+    phone: string().optional(),
+})});
 
-export const loginSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(1),
-});
+export const loginSchema = object({
+    body: object({
+    email: string().email(),
+    password: string().min(1),
+})});
 
-export const refreshSchema = z.object({
-    refreshToken: z.string().min(10),
-});
+export const refreshSchema = object({
+    body: object({
+    refreshToken: string().min(10),
+})});
 
 
-export const forgotPasswordSchema = z.object({
-    body: z.object({
-        email: z.string().email(),
+export const forgotPasswordSchema = object({
+    body: object({
+        email: string().email(),
     }),
 });
 
 export const resetPasswordSchema = z.object({
-    body: z.object({
-        email: z.string().email(),
-        resetTokenCode: z.string().min(6).max(6),
-        newPassword: z.string().min(6),
+    body: object({
+        email: string().email(),
+        resetTokenCode: string().min(6).max(6),
+        newPassword: string().min(6),
     }),
 });
 

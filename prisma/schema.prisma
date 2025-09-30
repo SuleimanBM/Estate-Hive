@@ -47,12 +47,15 @@ model User {
   id         String   @id @default(uuid())
   email      String   @unique
   password   String
-  name       String?
+  name       String
   phone      String?
   role       Role     @default(TENANT)
   isVerified Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  resetTokenCode   String?
+  resetTokenExpiry DateTime?
 
   // relations
   profile       Profile?
@@ -93,16 +96,18 @@ model Profile {
 }
 
 model Property {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   managerId   String? // which manager owns this property (nullable)
-  manager     User?    @relation("PropertyManager", fields: [managerId], references: [id], onDelete: SetNull)
+  manager     User?     @relation("PropertyManager", fields: [managerId], references: [id], onDelete: SetNull)
   title       String
   description String?
+  price       Float
   address     Json // structured address JSON (street/city/lat/lon etc)
   amenities   Json? // e.g. ["water","parking"]
-  status      String   @default("ACTIVE") // ACTIVE, ARCHIVED, UNDER_MAINTENANCE ...
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  images      Json?
+  status      String    @default("ACTIVE") // ACTIVE, ARCHIVED, UNDER_MAINTENANCE ...
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   // relations
   units Unit[]

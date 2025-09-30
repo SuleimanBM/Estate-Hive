@@ -1,13 +1,17 @@
 import { Router } from 'express';
-import { registerHandler, loginHandler, refreshHandler, logoutHandler } from '../controllers/auth.controller';
-import { validateBody } from '../middleware/validate.middleware';
-import { registerSchema } from '../validators/auth/register';
-import { loginSchema } from '../validators/auth/login';
-import { refreshSchema } from '../validators/auth/refresh';
+import { registerHandler, verifyEmailHandler, loginHandler, refreshHandler, logoutHandler, forgotPassword, resetPassword, } from '../controllers/auth.controller.js';
+import { validate } from '../middleware/validate.middleware.js';
+import { registerSchema, loginSchema, refreshSchema, forgotPasswordSchema, resetPasswordSchema } from '../validators/auth.validator.js';
 const router = Router();
-router.post('/register', validateBody(registerSchema), registerHandler);
-router.post('/login', validateBody(loginSchema), loginHandler);
-router.post('/refresh', validateBody(refreshSchema), refreshHandler);
-router.post('/logout', validateBody(refreshSchema), logoutHandler);
+// Registration + Verification
+router.post("/register", validate(registerSchema), registerHandler);
+router.get("/verify-email", verifyEmailHandler);
+// Authentication
+router.post("/login", validate(loginSchema), loginHandler);
+router.post("/refresh", validate(refreshSchema), refreshHandler);
+router.post("/logout", validate(refreshSchema), logoutHandler);
+// Password Reset Flow
+router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword);
+router.post("/reset-password", validate(resetPasswordSchema), resetPassword);
 export default router;
 //# sourceMappingURL=auth.route.js.map

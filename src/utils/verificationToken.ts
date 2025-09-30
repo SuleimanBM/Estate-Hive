@@ -4,7 +4,7 @@ export function generateVerificationToken(userId: string): string {
     return jwt.sign(
         { userId, type: "emailVerification" }, // payload
         process.env.JWT_SECRET!,               // secret key
-        { expiresIn: "24h" }                   // expires in 24h
+        { expiresIn: "5m" }                   // expires in 24h
     );
 }
 

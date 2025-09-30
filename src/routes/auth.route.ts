@@ -21,7 +21,7 @@ const router = Router();
 
 // Registration + Verification
 router.post("/register", validate(registerSchema), registerHandler);
-router.get("/verify-email/:token", verifyEmailHandler);
+router.get("/verify-email", verifyEmailHandler);
 
 // Authentication
 router.post("/login", validate(loginSchema), loginHandler);
