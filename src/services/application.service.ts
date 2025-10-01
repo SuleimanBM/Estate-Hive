@@ -51,8 +51,21 @@ export async function getApplicationsForManager(managerId: string) {
                     property: { managerId },
             },
             include: {
-                tenant: true,
-                property:true,
+                tenant: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                    },
+                },
+                property: {
+                    select: {
+                        id: true,
+                        title: true,
+                        status: true,
+                    },
+                },
+
             },
             orderBy: { createdAt: "desc" },
         });
@@ -62,7 +75,13 @@ export async function getApplicationById(id: string) {
         return prisma.application.findUnique({
             where: { id },
             include: {
-                tenant: true,
+                tenant: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                    },
+                },
                 property: true ,
                 lease: true,
             },
@@ -75,7 +94,16 @@ export async function approveApplication(applicationId: string, managerId: strin
         return prisma.$transaction(async (tx) => {
             const app = await tx.application.findUnique({
                 where: { id: applicationId },
-                include: { property: true , tenant: true },
+                include: {
+                    property: true, tenant: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                        },
+                    },
+ 
+ },
             });
             if (!app) throw new Error("Application not found");
 
@@ -126,7 +154,16 @@ export async function denyApplication(applicationId: string, managerId: string, 
         return prisma.$transaction(async (tx) => {
             const app = await tx.application.findUnique({
                 where: { id: applicationId },
-                include: { property: true , tenant: true },
+                include: {
+                    property: true, tenant: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                        },
+                    },
+
+ },
             });
             if (!app) throw new Error("Application not found");
             if (app.property.managerId !== managerId) throw new Error("Forbidden: you don't manage this property");
