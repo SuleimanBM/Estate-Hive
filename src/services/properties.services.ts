@@ -1,25 +1,11 @@
 import { s3Client } from "../utils/s3";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuidv4 } from "uuid";
 
 import { PrismaClient, Prisma } from "@prisma/client";
 const prisma = new PrismaClient();
 
-
-export async function generatePresignedUrl(fileType: string) {
-    const fileKey = `properties/${uuidv4()}.${fileType.split("/")[1]}`; // e.g. properties/uuid.png
-
-    const command = new PutObjectCommand({
-        Bucket: process.env.AWS_S3_BUCKET!,
-        Key: fileKey,
-        ContentType: fileType,
-    });
-
-    const url = await getSignedUrl(s3Client, command, { expiresIn: 60 * 5 }); // 5 minutes
-
-    return { url, fileKey };
-}
 
 export async function createProperty(managerId: string, data: any) {
     const property = await prisma.property.create({
@@ -121,6 +107,42 @@ export async function deleteProperty(id: string) {
     return prisma.property.delete({
         where: { id },
     });
+}
+
+export async function generatePresignedUrl(fileTypes: string[],folder: string) {
+    const results = [];
+
+    for (const fileType of fileTypes) {
+        const fileKey = `${folder}/${uuidv4()}.${fileType.split("/")[1]}`;
+
+        const command = new PutObjectCommand({
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: fileKey,
+            ContentType: fileType,
+        });
+
+        const url = await getSignedUrl(s3Client, command, { expiresIn: 60 * 5 });
+
+        results.push({ uploadUrl: url, fileKey });
+    }
+
+    return results;
+}
+
+export async function getFileUrl(fileKeys: string | string[]) {
+    const keys = Array.isArray(fileKeys) ? fileKeys : [fileKeys];
+    const results: string[] = [];
+
+    for (const fileKey of keys) {
+        const command = new GetObjectCommand({
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: fileKey,
+        });
+        const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+        results.push(url);
+    }
+
+    return results;
 }
 
 

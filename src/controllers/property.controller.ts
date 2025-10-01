@@ -1,24 +1,30 @@
 // src/modules/property/property.controller.ts
 import { NextFunction, Request, Response } from "express";
-import { createProperty, updateProperty, getAllProperties, getPropertyById, deleteProperty, generatePresignedUrl } from "../services/properties.services.js";
+import { createProperty, updateProperty, getAllProperties, getPropertyById, deleteProperty, generatePresignedUrl, getFileUrl } from "../services/properties.services.js";
 
 
 export async function getPresignedUrlHandler(req: Request, res: Response) {
     try {
-        const { fileType } = req.body; // e.g. "image/png"
-        console.log(fileType);
+        const { fileTypes } = req.body; // e.g. ["image/png", "image/jpeg"]
 
-        if (!fileType) {
-            return res.status(400).json({ error: "fileType is required" });
+        if (!fileTypes || !Array.isArray(fileTypes)) {
+            return res.status(400).json({ error: "fileTypes must be an array" });
         }
 
-        const { url, fileKey } = await generatePresignedUrl(fileType);
+        const urls = await generatePresignedUrl(fileTypes, "properties");
 
-        return res.json({ uploadUrl: url, fileKey });
+        return res.status(200).json({ urls });
+
     } catch (error: any) {
         console.error("Error generating presigned URL:", error);
         return res.status(500).json({ error: "Failed to generate upload URL" });
     }
+}
+
+export async function getFileHandler(req: Request, res: Response) {
+    const { fileKeys } = req.body; // array of file keys saved in DB
+    const urls = await getFileUrl(fileKeys);
+    return res.status(200).json({ urls });
 }
 
 export async function createPropertyHandler(req: Request, res: Response) {
@@ -30,18 +36,18 @@ export async function createPropertyHandler(req: Request, res: Response) {
 
 export async function getPropertiesHandler(req: Request, res: Response) {
     const result = await getAllProperties(req.query);
-    return res.json({success: true, ...result});
+    return res.status(200).json({success: true, ...result});
 }
 
 export async function getPropertyHandler(req: Request, res: Response) {
     const property = await getPropertyById(req.params.id);
     if (!property) return res.status(404).json({ message: "Property not found" });
-    res.json(property);
+    res.status(200).json(property);
 }
 
 export async function updatePropertyHandler(req: Request, res: Response) {
     const updated = await updateProperty(req.params.id, req.body);
-    res.json(updated);
+    res.status(200).json(updated);
 }
 
 export async function deletePropertyHandler(req: Request, res: Response) {

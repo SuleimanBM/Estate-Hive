@@ -13,6 +13,7 @@ import {
     updatePropertyHandler,
     deletePropertyHandler,
     getPresignedUrlHandler,
+    getFileHandler,
 } from "../controllers/property.controller";
 import { requireAuth, requireRole } from "../middleware/auth.middleware";
 import { validate } from '../middleware/validate.middleware.js';
@@ -20,7 +21,8 @@ import { createPropertySchema, propertyIdSchema, searchPropertySchema, updatePro
 
 const router = Router();
 
-router.post("/presigned-url", getPresignedUrlHandler)
+router.post("/upload-presigned-url", getPresignedUrlHandler)
+router.post("/download-presigned-url", getFileHandler)
 router.get("/all-properties", validate(searchPropertySchema), getPropertiesHandler);
 router.get("/:id", validate(propertyIdSchema), getPropertyHandler);
 router.post("/create", requireAuth, requireRole("ADMIN"), validate(createPropertySchema), createPropertyHandler);

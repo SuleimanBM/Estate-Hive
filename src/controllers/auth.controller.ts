@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
-import { hmacProcess } from "../middleware/hmac.js";
+//import { hmacProcess } from "../middleware/hmac.js";
 import transporter from "../middleware/send.mail";
 
 import * as authService from '../services/auth.service.js';
