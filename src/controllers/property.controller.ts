@@ -1,6 +1,6 @@
 // src/modules/property/property.controller.ts
 import { NextFunction, Request, Response } from "express";
-import { createProperty, updateProperty, getAllProperties, getPropertyById, deleteProperty, generatePresignedUrl, getFileUrl } from "../services/properties.services.js";
+import { createProperty, updateProperty, getAllProperties, getPropertyById, deleteProperty, generatePresignedUrl, getFileUrl } from "../services/properties.service.js";
 
 
 export async function getPresignedUrlHandler(req: Request, res: Response) {

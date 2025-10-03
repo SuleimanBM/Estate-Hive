@@ -122,7 +122,7 @@ export async function generateResetCode(email) {
     <p>We received a request to reset your password. Your reset code is:
     <strong>${resetTokenCode}</strong></p>
     <p>This code is valid for 10 minutes. If you did not request a password reset, please ignore this email.</p>
-    <p>Thank you,<br>estateHuve</p>
+    <p>Thank you,<br>estateHive</p>
   `;
     const info = await sendEmail(existingUser.email, "Password Reset code", " ", htmlContent);
     if (info.response && info.response.includes("OK")) {

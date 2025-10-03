@@ -1,61 +1,9 @@
 import { z } from "zod";
-export declare const addressSchema: z.ZodObject<{
-    street: z.ZodString;
-    city: z.ZodString;
-    region: z.ZodString;
-    country: z.ZodString;
-    lat: z.ZodOptional<z.ZodNumber>;
-    lon: z.ZodOptional<z.ZodNumber>;
-}, "strip", z.ZodTypeAny, {
-    city?: string;
-    street?: string;
-    region?: string;
-    country?: string;
-    lat?: number;
-    lon?: number;
-}, {
-    city?: string;
-    street?: string;
-    region?: string;
-    country?: string;
-    lat?: number;
-    lon?: number;
-}>;
-export declare const unitInputSchema: z.ZodObject<{
-    unitNumber: z.ZodOptional<z.ZodString>;
-    name: z.ZodOptional<z.ZodString>;
-    sizeSqm: z.ZodOptional<z.ZodNumber>;
-    rentAmount: z.ZodOptional<z.ZodNumber>;
-    depositAmount: z.ZodOptional<z.ZodNumber>;
-    currency: z.ZodOptional<z.ZodString>;
-    availability: z.ZodOptional<z.ZodString>;
-    images: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
-    metadata: z.ZodOptional<z.ZodAny>;
-}, "strip", z.ZodTypeAny, {
-    name?: string;
-    unitNumber?: string;
-    sizeSqm?: number;
-    rentAmount?: number;
-    depositAmount?: number;
-    currency?: string;
-    availability?: string;
-    images?: string[];
-    metadata?: any;
-}, {
-    name?: string;
-    unitNumber?: string;
-    sizeSqm?: number;
-    rentAmount?: number;
-    depositAmount?: number;
-    currency?: string;
-    availability?: string;
-    images?: string[];
-    metadata?: any;
-}>;
 export declare const createPropertySchema: z.ZodObject<{
     body: z.ZodObject<{
         title: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
+        price: z.ZodNumber;
         address: z.ZodObject<{
             street: z.ZodString;
             city: z.ZodString;
@@ -64,156 +12,85 @@ export declare const createPropertySchema: z.ZodObject<{
             lat: z.ZodOptional<z.ZodNumber>;
             lon: z.ZodOptional<z.ZodNumber>;
         }, "strip", z.ZodTypeAny, {
-            city?: string;
-            street?: string;
             region?: string;
+            city?: string;
             country?: string;
+            street?: string;
             lat?: number;
             lon?: number;
         }, {
-            city?: string;
-            street?: string;
             region?: string;
+            city?: string;
             country?: string;
+            street?: string;
             lat?: number;
             lon?: number;
         }>;
         amenities: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
-        status: z.ZodOptional<z.ZodString>;
-        units: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            unitNumber: z.ZodOptional<z.ZodString>;
-            name: z.ZodOptional<z.ZodString>;
-            sizeSqm: z.ZodOptional<z.ZodNumber>;
-            rentAmount: z.ZodOptional<z.ZodNumber>;
-            depositAmount: z.ZodOptional<z.ZodNumber>;
-            currency: z.ZodOptional<z.ZodString>;
-            availability: z.ZodOptional<z.ZodString>;
-            images: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
-            metadata: z.ZodOptional<z.ZodAny>;
-        }, "strip", z.ZodTypeAny, {
-            name?: string;
-            unitNumber?: string;
-            sizeSqm?: number;
-            rentAmount?: number;
-            depositAmount?: number;
-            currency?: string;
-            availability?: string;
-            images?: string[];
-            metadata?: any;
-        }, {
-            name?: string;
-            unitNumber?: string;
-            sizeSqm?: number;
-            rentAmount?: number;
-            depositAmount?: number;
-            currency?: string;
-            availability?: string;
-            images?: string[];
-            metadata?: any;
-        }>, "many">>;
+        status: z.ZodOptional<z.ZodEnum<["ACTIVE", "ARCHIVED", "UNDER_MAINTENANCE", "PENDING_APPROVAL"]>>;
     }, "strip", z.ZodTypeAny, {
         description?: string;
-        status?: string;
+        status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
         title?: string;
+        price?: number;
         address?: {
-            city?: string;
-            street?: string;
             region?: string;
+            city?: string;
             country?: string;
+            street?: string;
             lat?: number;
             lon?: number;
         };
         amenities?: string[];
-        units?: {
-            name?: string;
-            unitNumber?: string;
-            sizeSqm?: number;
-            rentAmount?: number;
-            depositAmount?: number;
-            currency?: string;
-            availability?: string;
-            images?: string[];
-            metadata?: any;
-        }[];
     }, {
         description?: string;
-        status?: string;
+        status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
         title?: string;
+        price?: number;
         address?: {
-            city?: string;
-            street?: string;
             region?: string;
+            city?: string;
             country?: string;
+            street?: string;
             lat?: number;
             lon?: number;
         };
         amenities?: string[];
-        units?: {
-            name?: string;
-            unitNumber?: string;
-            sizeSqm?: number;
-            rentAmount?: number;
-            depositAmount?: number;
-            currency?: string;
-            availability?: string;
-            images?: string[];
-            metadata?: any;
-        }[];
     }>;
 }, "strip", z.ZodTypeAny, {
     body?: {
         description?: string;
-        status?: string;
+        status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
         title?: string;
+        price?: number;
         address?: {
-            city?: string;
-            street?: string;
             region?: string;
+            city?: string;
             country?: string;
+            street?: string;
             lat?: number;
             lon?: number;
         };
         amenities?: string[];
-        units?: {
-            name?: string;
-            unitNumber?: string;
-            sizeSqm?: number;
-            rentAmount?: number;
-            depositAmount?: number;
-            currency?: string;
-            availability?: string;
-            images?: string[];
-            metadata?: any;
-        }[];
     };
 }, {
     body?: {
         description?: string;
-        status?: string;
+        status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
         title?: string;
+        price?: number;
         address?: {
-            city?: string;
-            street?: string;
             region?: string;
+            city?: string;
             country?: string;
+            street?: string;
             lat?: number;
             lon?: number;
         };
         amenities?: string[];
-        units?: {
-            name?: string;
-            unitNumber?: string;
-            sizeSqm?: number;
-            rentAmount?: number;
-            depositAmount?: number;
-            currency?: string;
-            availability?: string;
-            images?: string[];
-            metadata?: any;
-        }[];
     };
 }>;
-export declare const updatePropertySchema: z.ZodObject<{
+export declare const propertyIdSchema: z.ZodObject<{
     params: z.ZodObject<{
         id: z.ZodString;
     }, "strip", z.ZodTypeAny, {
@@ -221,58 +98,108 @@ export declare const updatePropertySchema: z.ZodObject<{
     }, {
         id?: string;
     }>;
+}, "strip", z.ZodTypeAny, {
+    params?: {
+        id?: string;
+    };
+}, {
+    params?: {
+        id?: string;
+    };
+}>;
+export declare const searchPropertySchema: z.ZodObject<{
+    query: z.ZodObject<{
+        title: z.ZodOptional<z.ZodString>;
+        minPrice: z.ZodOptional<z.ZodNumber>;
+        maxPrice: z.ZodOptional<z.ZodNumber>;
+        city: z.ZodOptional<z.ZodString>;
+        region: z.ZodOptional<z.ZodString>;
+        country: z.ZodOptional<z.ZodString>;
+        amenities: z.ZodOptional<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodArray<z.ZodString, "many">]>, string[], string | string[]>>;
+        status: z.ZodOptional<z.ZodEnum<["ACTIVE", "ARCHIVED", "UNDER_MAINTENANCE", "PENDING_APPROVAL"]>>;
+        page: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        limit: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        sortBy: z.ZodOptional<z.ZodString>;
+        sortOrder: z.ZodOptional<z.ZodEnum<["asc", "desc"]>>;
+    }, "strip", z.ZodTypeAny, {
+        limit?: number;
+        status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
+        region?: string;
+        title?: string;
+        amenities?: string[];
+        minPrice?: number;
+        maxPrice?: number;
+        city?: string;
+        country?: string;
+        page?: number;
+        sortBy?: string;
+        sortOrder?: "asc" | "desc";
+    }, {
+        limit?: number;
+        status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
+        region?: string;
+        title?: string;
+        amenities?: string | string[];
+        minPrice?: number;
+        maxPrice?: number;
+        city?: string;
+        country?: string;
+        page?: number;
+        sortBy?: string;
+        sortOrder?: "asc" | "desc";
+    }>;
+}, "strip", z.ZodTypeAny, {
+    query?: {
+        limit?: number;
+        status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
+        region?: string;
+        title?: string;
+        amenities?: string[];
+        minPrice?: number;
+        maxPrice?: number;
+        city?: string;
+        country?: string;
+        page?: number;
+        sortBy?: string;
+        sortOrder?: "asc" | "desc";
+    };
+}, {
+    query?: {
+        limit?: number;
+        status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
+        region?: string;
+        title?: string;
+        amenities?: string | string[];
+        minPrice?: number;
+        maxPrice?: number;
+        city?: string;
+        country?: string;
+        page?: number;
+        sortBy?: string;
+        sortOrder?: "asc" | "desc";
+    };
+}>;
+export declare const updatePropertySchema: z.ZodObject<{
     body: z.ZodObject<{
         title: z.ZodOptional<z.ZodString>;
         description: z.ZodOptional<z.ZodString>;
-        address: z.ZodOptional<z.ZodObject<{
-            street: z.ZodString;
-            city: z.ZodString;
-            region: z.ZodString;
-            country: z.ZodString;
-            lat: z.ZodOptional<z.ZodNumber>;
-            lon: z.ZodOptional<z.ZodNumber>;
-        }, "strip", z.ZodTypeAny, {
-            city?: string;
-            street?: string;
-            region?: string;
-            country?: string;
-            lat?: number;
-            lon?: number;
-        }, {
-            city?: string;
-            street?: string;
-            region?: string;
-            country?: string;
-            lat?: number;
-            lon?: number;
-        }>>;
+        address: z.ZodOptional<z.ZodString>;
+        price: z.ZodOptional<z.ZodNumber>;
         amenities: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         status: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         description?: string;
         status?: string;
         title?: string;
-        address?: {
-            city?: string;
-            street?: string;
-            region?: string;
-            country?: string;
-            lat?: number;
-            lon?: number;
-        };
+        price?: number;
+        address?: string;
         amenities?: string[];
     }, {
         description?: string;
         status?: string;
         title?: string;
-        address?: {
-            city?: string;
-            street?: string;
-            region?: string;
-            country?: string;
-            lat?: number;
-            lon?: number;
-        };
+        price?: number;
+        address?: string;
         amenities?: string[];
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -280,53 +207,18 @@ export declare const updatePropertySchema: z.ZodObject<{
         description?: string;
         status?: string;
         title?: string;
-        address?: {
-            city?: string;
-            street?: string;
-            region?: string;
-            country?: string;
-            lat?: number;
-            lon?: number;
-        };
+        price?: number;
+        address?: string;
         amenities?: string[];
-    };
-    params?: {
-        id?: string;
     };
 }, {
     body?: {
         description?: string;
         status?: string;
         title?: string;
-        address?: {
-            city?: string;
-            street?: string;
-            region?: string;
-            country?: string;
-            lat?: number;
-            lon?: number;
-        };
+        price?: number;
+        address?: string;
         amenities?: string[];
-    };
-    params?: {
-        id?: string;
-    };
-}>;
-export declare const propertyIdParam: z.ZodObject<{
-    params: z.ZodObject<{
-        id: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
-        id?: string;
-    }, {
-        id?: string;
-    }>;
-}, "strip", z.ZodTypeAny, {
-    params?: {
-        id?: string;
-    };
-}, {
-    params?: {
-        id?: string;
     };
 }>;
 //# sourceMappingURL=property.validator.d.ts.map

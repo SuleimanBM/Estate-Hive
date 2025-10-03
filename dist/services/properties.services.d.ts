@@ -6,90 +6,44 @@ export declare function createProperty(managerId: string, data: any): Promise<{
     description: string | null;
     status: string;
     title: string;
+    price: number;
     address: Prisma.JsonValue;
     amenities: Prisma.JsonValue | null;
+    images: Prisma.JsonValue | null;
     managerId: string | null;
 }>;
-export declare function getAllProperties(): Promise<({
-    manager: {
-        email: string;
-        password: string;
-        resetTokenCode: string | null;
-        name: string;
+export declare function getAllProperties(filters: any): Promise<{
+    data: ({} & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        phone: string | null;
-        role: import("@prisma/client").$Enums.Role;
-        isVerified: boolean;
-        resetTokenExpiry: Date | null;
-        scopes: Prisma.JsonValue | null;
-    };
-    units: {
-        name: string | null;
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        unitNumber: string | null;
-        sizeSqm: number | null;
-        rentAmount: Prisma.Decimal;
-        depositAmount: Prisma.Decimal;
-        currency: string;
-        availability: string;
+        description: string | null;
+        status: string;
+        title: string;
+        price: number;
+        address: Prisma.JsonValue;
+        amenities: Prisma.JsonValue | null;
         images: Prisma.JsonValue | null;
-        metadata: Prisma.JsonValue | null;
-        propertyId: string;
-    }[];
-} & {
+        managerId: string | null;
+    })[];
+    pagination: {
+        total: number;
+        page: any;
+        limit: any;
+        totalPages: number;
+    };
+}>;
+export declare function getPropertyById(id: string): Promise<{} & {
     id: string;
     createdAt: Date;
     updatedAt: Date;
     description: string | null;
     status: string;
     title: string;
+    price: number;
     address: Prisma.JsonValue;
     amenities: Prisma.JsonValue | null;
-    managerId: string | null;
-})[]>;
-export declare function getPropertyById(id: string): Promise<{
-    manager: {
-        email: string;
-        password: string;
-        resetTokenCode: string | null;
-        name: string;
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        phone: string | null;
-        role: import("@prisma/client").$Enums.Role;
-        isVerified: boolean;
-        resetTokenExpiry: Date | null;
-        scopes: Prisma.JsonValue | null;
-    };
-    units: {
-        name: string | null;
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        unitNumber: string | null;
-        sizeSqm: number | null;
-        rentAmount: Prisma.Decimal;
-        depositAmount: Prisma.Decimal;
-        currency: string;
-        availability: string;
-        images: Prisma.JsonValue | null;
-        metadata: Prisma.JsonValue | null;
-        propertyId: string;
-    }[];
-} & {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    description: string | null;
-    status: string;
-    title: string;
-    address: Prisma.JsonValue;
-    amenities: Prisma.JsonValue | null;
+    images: Prisma.JsonValue | null;
     managerId: string | null;
 }>;
 export declare function updateProperty(id: string, data: any): Promise<{
@@ -99,8 +53,10 @@ export declare function updateProperty(id: string, data: any): Promise<{
     description: string | null;
     status: string;
     title: string;
+    price: number;
     address: Prisma.JsonValue;
     amenities: Prisma.JsonValue | null;
+    images: Prisma.JsonValue | null;
     managerId: string | null;
 }>;
 export declare function deleteProperty(id: string): Promise<{
@@ -110,8 +66,12 @@ export declare function deleteProperty(id: string): Promise<{
     description: string | null;
     status: string;
     title: string;
+    price: number;
     address: Prisma.JsonValue;
     amenities: Prisma.JsonValue | null;
+    images: Prisma.JsonValue | null;
     managerId: string | null;
 }>;
+export declare function generatePresignedUrl(fileTypes: string[], folder: string): Promise<any[]>;
+export declare function getFileUrl(fileKeys: string | string[]): Promise<string[]>;
 //# sourceMappingURL=properties.services.d.ts.map

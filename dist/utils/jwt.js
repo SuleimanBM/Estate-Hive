@@ -1,31 +1,5 @@
 // utils/jwt.ts
 import jwt from "jsonwebtoken";
-export function signJwt(userId) {
-    if (!process.env.JWT_SECRET) {
-        throw new Error("JWT_SECRET is not defined in environment variables");
-    }
-    return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "1d" });
-}
-export function verifyJwt(token) {
-    if (!process.env.JWT_SECRET) {
-        throw new Error("JWT_SECRET is not defined in environment variables");
-    }
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return {
-            valid: true,
-            expired: false,
-            decoded,
-        };
-    }
-    catch (e) {
-        return {
-            valid: false,
-            expired: e.message === "jwt expired",
-            decoded: null
-        };
-    }
-}
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access-secret';
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'refresh-secret';
 const ACCESS_TOKEN_EXPIRES_IN = process.env.ACCESS_TOKEN_EXPIRES_IN || '15m';
@@ -34,7 +8,7 @@ if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
     throw new Error('JWT secrets must be defined in environment variables');
 }
 export function signAccessToken(payload) {
-    const expiresIn = "15m";
+    const expiresIn = "1h";
     // FIX: Initialize options as an empty object and conditionally assign properties.
     // This avoids the type conflict caused by the conditional spread operator.
     const options = {};

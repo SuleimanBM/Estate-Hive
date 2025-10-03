@@ -14,8 +14,8 @@ import {
     deletePropertyHandler,
     getPresignedUrlHandler,
     getFileHandler,
-} from "../controllers/property.controller";
-import { requireAuth, requireRole } from "../middleware/auth.middleware";
+} from "../controllers/property.controller.js";
+import { requireAuth, requireRole } from "../middleware/auth.middleware.js";
 import { validate } from '../middleware/validate.middleware.js';
 import { createPropertySchema, propertyIdSchema, searchPropertySchema, updatePropertySchema } from "../validators/property.validator.js";
 

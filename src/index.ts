@@ -13,7 +13,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import helmet from "helmet"
 import cors from "cors"
-
+import csurf from "csurf"
 // Load environment variables
 dotenv.config();
 
@@ -34,6 +34,23 @@ app.use(cors({
     methods: ["GET", "PUT", "POST",],
     credentials: true
 }))
+//app.use(csurf({ cookie: true }));
+const csrfProtection = csurf({ cookie: true });
+
+interface CsrfRequest extends Request {
+    csrfToken: () => string;
+}
+
+app.get("/csrf-token", csrfProtection, (req, res) => {
+    const token = (req as CsrfRequest).csrfToken();
+    res.json({ csrfToken: token });
+});
+
+
+app.post("/submit", csrfProtection, (req, res) => {
+    res.send("Request passed CSRF check!");
+});
+
 
 // Static files
 app.use(
