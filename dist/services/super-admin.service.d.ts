@@ -7,14 +7,14 @@ export declare function createSuperAdmin(data: {
     email: string;
     name: string;
     id: string;
-    role: import("@prisma/client").$Enums.Role;
+    role: import(".prisma/client").$Enums.Role;
     createdAt: Date;
 }>;
 export declare function getAllAdmins(): Promise<{
     email: string;
     name: string;
     id: string;
-    role: import("@prisma/client").$Enums.Role;
+    role: import(".prisma/client").$Enums.Role;
     createdAt: Date;
 }[]>;
 export declare function getAllUsers(): Promise<{
@@ -78,7 +78,7 @@ export declare function getAllApplications(): Promise<({
     createdAt: Date;
     updatedAt: Date;
     message: string | null;
-    status: import("@prisma/client").$Enums.ApplicationStatus;
+    status: import(".prisma/client").$Enums.ApplicationStatus;
     leaseId: string | null;
     propertyId: string;
     tenantId: string;
@@ -97,7 +97,7 @@ export declare function getAllLeases(): Promise<({
     id: string;
     createdAt: Date;
     updatedAt: Date;
-    status: import("@prisma/client").$Enums.LeaseStatus;
+    status: import(".prisma/client").$Enums.LeaseStatus;
     propertyId: string;
     tenantId: string;
     applicationId: string | null;
@@ -123,7 +123,7 @@ export declare function getAllPayments(): Promise<({
     id: string;
     createdAt: Date;
     updatedAt: Date;
-    status: import("@prisma/client").$Enums.PaymentStatus;
+    status: import(".prisma/client").$Enums.PaymentStatus;
     metadata: Prisma.JsonValue | null;
     leaseId: string | null;
     unitId: string | null;
@@ -140,7 +140,7 @@ export declare function updateUser(userId: string, data: Partial<{
     email: string;
     name: string;
     id: string;
-    role: import("@prisma/client").$Enums.Role;
+    role: import(".prisma/client").$Enums.Role;
 }>;
 export declare function deleteUser(userId: string): Promise<{
     email: string;
@@ -149,7 +149,7 @@ export declare function deleteUser(userId: string): Promise<{
     name: string;
     phone: string | null;
     id: string;
-    role: import("@prisma/client").$Enums.Role;
+    role: import(".prisma/client").$Enums.Role;
     isVerified: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -193,7 +193,7 @@ export declare function overrideApplicationStatus(applicationId: string, status:
     createdAt: Date;
     updatedAt: Date;
     message: string | null;
-    status: import("@prisma/client").$Enums.ApplicationStatus;
+    status: import(".prisma/client").$Enums.ApplicationStatus;
     leaseId: string | null;
     propertyId: string;
     tenantId: string;
@@ -205,7 +205,7 @@ export declare function overrideLease(leaseId: string, data: Partial<{
     id: string;
     createdAt: Date;
     updatedAt: Date;
-    status: import("@prisma/client").$Enums.LeaseStatus;
+    status: import(".prisma/client").$Enums.LeaseStatus;
     propertyId: string;
     tenantId: string;
     applicationId: string | null;
@@ -220,7 +220,7 @@ export declare function deleteLease(leaseId: string): Promise<{
     id: string;
     createdAt: Date;
     updatedAt: Date;
-    status: import("@prisma/client").$Enums.LeaseStatus;
+    status: import(".prisma/client").$Enums.LeaseStatus;
     propertyId: string;
     tenantId: string;
     applicationId: string | null;
@@ -239,7 +239,7 @@ export declare function overridePayment(paymentId: string, data: Partial<{
     id: string;
     createdAt: Date;
     updatedAt: Date;
-    status: import("@prisma/client").$Enums.PaymentStatus;
+    status: import(".prisma/client").$Enums.PaymentStatus;
     metadata: Prisma.JsonValue | null;
     leaseId: string | null;
     unitId: string | null;

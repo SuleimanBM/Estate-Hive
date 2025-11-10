@@ -1,4 +1,4 @@
-import * as SuperAdminService from "../services/super-admin.service";
+import * as SuperAdminService from "../services/super-admin.service.js";
 // Create super admin (rare, but allowed)
 export async function createSuperAdmin(req, res) {
     try {

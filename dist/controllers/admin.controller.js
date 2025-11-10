@@ -5,7 +5,6 @@
 // import { hmacProcess } from "../middleware/hmac.js";
 // import transporter from "../middleware/send.mail.js";
 // import mongoose from "mongoose";
-export {};
 // interface CreateAdminRequest extends Request {
 //     body: {
 //         name: string;

@@ -17,7 +17,7 @@ export async function createProperty(managerId: string, data: any) {
     return property
 }
 
-export async function getAllProperties(filters) {
+export async function getAllProperties(filters: any) {
     let {
         title,
         minPrice,

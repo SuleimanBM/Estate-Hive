@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createSuperAdmin, deleteLease, deleteProperty, deleteUser, getAllAdmins, getAllApplications, getAllLeases, getAllPayments, getAllProperties, getAllUsers, overrideApplicationStatus, overrideLease, overridePayment, updateProperty, updateUser } from "../controllers/super.admin.controller";
+import { createSuperAdmin, deleteLease, deleteProperty, deleteUser, getAllAdmins, getAllApplications, getAllLeases, getAllPayments, getAllProperties, getAllUsers, overrideApplicationStatus, overrideLease, overridePayment, updateProperty, updateUser } from "../controllers/super.admin.controller.js";
 const router = Router();
 router.post("/", createSuperAdmin);
 router.get("/users", getAllUsers);

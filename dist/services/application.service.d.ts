@@ -9,7 +9,7 @@ export declare function createApplication(tenantId: string, data: {
     createdAt: Date;
     updatedAt: Date;
     message: string | null;
-    status: import("@prisma/client").$Enums.ApplicationStatus;
+    status: import(".prisma/client").$Enums.ApplicationStatus;
     leaseId: string | null;
     propertyId: string;
     tenantId: string;
@@ -34,7 +34,7 @@ export declare function getApplicationsByTenant(tenantId: string): Promise<({
     createdAt: Date;
     updatedAt: Date;
     message: string | null;
-    status: import("@prisma/client").$Enums.ApplicationStatus;
+    status: import(".prisma/client").$Enums.ApplicationStatus;
     leaseId: string | null;
     propertyId: string;
     tenantId: string;
@@ -56,7 +56,7 @@ export declare function getApplicationsForManager(managerId: string): Promise<({
     createdAt: Date;
     updatedAt: Date;
     message: string | null;
-    status: import("@prisma/client").$Enums.ApplicationStatus;
+    status: import(".prisma/client").$Enums.ApplicationStatus;
     leaseId: string | null;
     propertyId: string;
     tenantId: string;
@@ -84,7 +84,7 @@ export declare function getApplicationById(id: string): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        status: import("@prisma/client").$Enums.LeaseStatus;
+        status: import(".prisma/client").$Enums.LeaseStatus;
         propertyId: string;
         tenantId: string;
         applicationId: string | null;
@@ -101,7 +101,7 @@ export declare function getApplicationById(id: string): Promise<{
     createdAt: Date;
     updatedAt: Date;
     message: string | null;
-    status: import("@prisma/client").$Enums.ApplicationStatus;
+    status: import(".prisma/client").$Enums.ApplicationStatus;
     leaseId: string | null;
     propertyId: string;
     tenantId: string;
@@ -116,7 +116,7 @@ export declare function approveApplication(applicationId: string, managerId: str
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        status: import("@prisma/client").$Enums.LeaseStatus;
+        status: import(".prisma/client").$Enums.LeaseStatus;
         propertyId: string;
         tenantId: string;
         applicationId: string | null;
@@ -138,7 +138,7 @@ export declare function withdrawApplication(applicationId: string, tenantId: str
     createdAt: Date;
     updatedAt: Date;
     message: string | null;
-    status: import("@prisma/client").$Enums.ApplicationStatus;
+    status: import(".prisma/client").$Enums.ApplicationStatus;
     leaseId: string | null;
     propertyId: string;
     tenantId: string;

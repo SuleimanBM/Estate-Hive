@@ -2,9 +2,9 @@ import { PrismaClient, Prisma } from '@prisma/client';
 import { hashPassword, comparePasswords } from '../utils/password.js';
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
 import { stringify } from 'querystring';
-import { sendEmail } from 'utils/email.js';
-import {generateVerificationToken, verifyVerificationToken} from 'utils/verificationToken.js';
-import { hmacProcess } from 'utils/hmac.js';
+import { sendEmail } from '../utils/email';
+import {generateVerificationToken, verifyVerificationToken} from '../utils/verificationToken';
+import { hmacProcess } from '../utils/hmac';
 import { JwtPayload } from 'jsonwebtoken';
 
 

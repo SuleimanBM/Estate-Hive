@@ -1,7 +1,7 @@
 import swaggerUi from "swagger-ui-express";
-import authDocs from "./swagger-docs/auth";
-import propertyDocs from "./swagger-docs/property";
-import applicationDocs from "./swagger-docs/applications";
+import authDocs from "./swagger-docs/auth.js";
+import propertyDocs from "./swagger-docs/property.js";
+import applicationDocs from "./swagger-docs/applications.js";
 const swaggerSpec = {
     openapi: "3.1.0",
     info: {

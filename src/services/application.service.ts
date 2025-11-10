@@ -18,7 +18,7 @@ export async function createApplication(tenantId: string, data: { propertyId: st
                 property: { connect: { id: data.propertyId } },
                 tenant: { connect: { id: tenantId } },
                 message: data.message ?? undefined,
-                attachments: data.attachments ? (data.attachments as Prisma.JsonValue) : undefined,
+                attachments: data.attachments 
             },
         });
 

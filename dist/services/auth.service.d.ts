@@ -12,7 +12,7 @@ export declare function registerService({ name, email, password, phone }: {
         name: string;
         phone: string | null;
         id: string;
-        role: import("@prisma/client").$Enums.Role;
+        role: import(".prisma/client").$Enums.Role;
         isVerified: boolean;
         createdAt: Date;
         updatedAt: Date;
@@ -44,7 +44,7 @@ export declare function loginService({ email, password }: {
         name: string;
         phone: string | null;
         id: string;
-        role: import("@prisma/client").$Enums.Role;
+        role: import(".prisma/client").$Enums.Role;
         isVerified: boolean;
         createdAt: Date;
         updatedAt: Date;

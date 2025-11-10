@@ -1,4 +1,4 @@
 import nodemailer from 'nodemailer';
-declare const transporter: nodemailer.Transporter<import("nodemailer/lib/smtp-transport").SentMessageInfo, import("nodemailer/lib/smtp-transport").Options>;
+declare const transporter: nodemailer.Transporter<import("nodemailer/lib/smtp-transport/index.js").SentMessageInfo, import("nodemailer/lib/smtp-transport/index.js").Options>;
 export default transporter;
 //# sourceMappingURL=send.mail.d.ts.map

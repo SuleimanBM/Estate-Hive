@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { hashPassword, comparePasswords } from '../utils/password.js';
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
-import { sendEmail } from 'utils/email.js';
-import { generateVerificationToken, verifyVerificationToken } from 'utils/verificationToken.js';
-import { hmacProcess } from 'utils/hmac.js';
+import { sendEmail } from '../utils/email.js';
+import { generateVerificationToken, verifyVerificationToken } from '../utils/verificationToken.js';
+import { hmacProcess } from '../utils/hmac.js';
 const prisma = new PrismaClient();
 export async function registerService({ name, email, password, phone }) {
     const existing = await prisma.user.findUnique({ where: { email } });
