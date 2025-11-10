@@ -36,7 +36,7 @@ export async function getAllProperties(filters) {
     const where: any = {};
 
     if (title) {
-        where.title = { contains: title, mode: "insensitive" }; // LIKE %title%
+        where.title = { contains: title, mode: "insensitive" };
     }
 
     if (minPrice || maxPrice) {

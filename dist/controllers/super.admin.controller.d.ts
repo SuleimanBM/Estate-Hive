@@ -1,16 +1,17 @@
 import { Request, Response } from "express";
-interface CreateSuperAdminRequest extends Request {
-    body: {
-        name: string;
-        email: string;
-        password: string;
-    };
-}
-export declare const createSuperAdmin: (req: CreateSuperAdminRequest, res: Response) => Promise<Response<any, Record<string, any>>>;
-export declare const getAllAdmins: (req: Request, res: Response) => Promise<Response<any, Record<string, any>>>;
-export declare const getAllUsers: (req: Request, res: Response) => Promise<Response<any, Record<string, any>>>;
-export declare const getAllLands: (req: Request, res: Response) => Promise<Response<any, Record<string, any>>>;
-export declare const getAllBuildings: (req: Request, res: Response) => Promise<Response<any, Record<string, any>>>;
-export declare const getAllTransactions: (req: Request, res: Response) => Promise<Response<any, Record<string, any>>>;
-export {};
+export declare function createSuperAdmin(req: Request, res: Response): Promise<void>;
+export declare function getAllAdmins(req: Request, res: Response): Promise<void>;
+export declare function getAllUsers(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
+export declare function updateUser(req: Request, res: Response): Promise<void>;
+export declare function deleteUser(req: Request, res: Response): Promise<void>;
+export declare function getAllProperties(req: Request, res: Response): Promise<void>;
+export declare function updateProperty(req: Request, res: Response): Promise<void>;
+export declare function deleteProperty(req: Request, res: Response): Promise<void>;
+export declare function getAllApplications(req: Request, res: Response): Promise<void>;
+export declare function overrideApplicationStatus(req: Request, res: Response): Promise<void>;
+export declare function getAllLeases(req: Request, res: Response): Promise<void>;
+export declare function overrideLease(req: Request, res: Response): Promise<void>;
+export declare function deleteLease(req: Request, res: Response): Promise<void>;
+export declare function getAllPayments(req: Request, res: Response): Promise<void>;
+export declare function overridePayment(req: Request, res: Response): Promise<void>;
 //# sourceMappingURL=super.admin.controller.d.ts.map

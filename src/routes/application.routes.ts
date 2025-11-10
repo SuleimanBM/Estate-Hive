@@ -8,12 +8,10 @@ import { requireManagerOfApplication } from "../middleware/application.middlewar
 
 const router = Router();
 
-// Tenant endpoints
-router.post("/", validate(createApplicationSchema), create);
+router.post("/create", validate(createApplicationSchema), create);
 router.get("/my", listForTenant);
 router.post("/:id/withdraw", validate(applicationIdParam), withdraw);
 
-// Manager endpoints
 router.get("/manager", requireRole("MANAGER", "ADMIN", "SUPERADMIN"), listForManager);
 router.get("/:id", validate(applicationIdParam), getById);
 router.post("/:id/approve", requireRole("MANAGER", "ADMIN", "SUPERADMIN"), requireManagerOfApplication, validate(approveApplicationSchema), approve);

@@ -5,24 +5,24 @@ export declare const createApplicationSchema: z.ZodObject<{
         message: z.ZodOptional<z.ZodString>;
         attachments: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
     }, "strip", z.ZodTypeAny, {
-        message?: string;
         attachments?: string[];
+        message?: string;
         propertyId?: string;
     }, {
-        message?: string;
         attachments?: string[];
+        message?: string;
         propertyId?: string;
     }>;
 }, "strip", z.ZodTypeAny, {
     body?: {
-        message?: string;
         attachments?: string[];
+        message?: string;
         propertyId?: string;
     };
 }, {
     body?: {
-        message?: string;
         attachments?: string[];
+        message?: string;
         propertyId?: string;
     };
 }>;

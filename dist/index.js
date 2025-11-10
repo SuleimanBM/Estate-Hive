@@ -1,26 +1,15 @@
 import express from "express";
-// import adminRoutes from "./routes/admin.route.js";
-// import userRoutes from "./routes/auth.route.js";
-// import superAdminRoutes from "./routes/super.admin.routes.js";
-// import propertyRoutes from "./routes/property.route.js";
-// import paystackRoutes from "./routes/paystack.routes.js";
 import routes from "./routes/index.js";
 import dotenv from "dotenv";
-import { connectToDB } from "./config/mongodb.js";
-import multer from "multer";
 import cookieParser from "cookie-parser";
-import path from "path";
-import { fileURLToPath } from "url";
 import helmet from "helmet";
 import cors from "cors";
 import csurf from "csurf";
+import { setupSwagger } from "./swagger.js";
 // Load environment variables
 dotenv.config();
 const port = process.env.PORT || 3000;
 const app = express();
-// Configuring the pathnames for files and directories
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -40,25 +29,6 @@ app.get("/csrf-token", csrfProtection, (req, res) => {
 app.post("/submit", csrfProtection, (req, res) => {
     res.send("Request passed CSRF check!");
 });
-// Static files
-app.use("/assets", express.static(path.join(__dirname, "public/assets")));
-// Multer configuration
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "public/assets");
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname));
-    }
-});
-const upload = multer({
-    storage,
-    limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
-    }
-});
-// Connect to database
-connectToDB();
 // Routes
 routes(app);
 //Health check endpoint
@@ -69,13 +39,6 @@ app.put('/health', (req, res) => {
         uptime: process.uptime()
     });
 });
-// 404 handler
-// app.use('/*', (req: Request, res: Response) => {
-//     res.status(404).json({
-//         success: false,
-//         message: `Route ${req.originalUrl} not found`
-//     });
-// });
 // Global error handler
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);
@@ -85,6 +48,7 @@ app.use((err, req, res, next) => {
         ...(process.env.NODE_ENV === 'development' && { error: err.message })
     });
 });
+setupSwagger(app);
 // Start server
 const server = app.listen(port, () => {
     console.log(`🚀 Server is listening on port ${port}`);

@@ -29,35 +29,4 @@ router.post("/create", requireAuth, requireRole("ADMIN"), validate(createPropert
 router.patch("/:id", requireAuth, requireRole("ADMIN"), validate(updatePropertySchema),validate(propertyIdSchema), updatePropertyHandler);
 router.delete("/:id", requireAuth, requireRole("ADMIN"), validate(updatePropertySchema), validate(propertyIdSchema), deletePropertyHandler);
 
-// Public: list and view
-// router.get("/", getAll);
-// router.get("/:id", validate(propertyIdParam), getById);
-
-// // Create: managers & admins can create (MANAGER will be set as managerId)
-// router.post(
-//     "/",
-//     requireAuth,
-//     requireRole("MANAGER", "ADMIN", "SUPERADMIN"),
-//     validate(createPropertySchema),
-//     create
-// );
-
-// // Update: owner manager, admin or superadmin
-// router.put(
-//     "/:id",
-//     requireAuth,
-//     validate(updatePropertySchema),
-//     requirePropertyOwnership,
-//     update
-// );
-
-// // Delete
-// router.delete(
-//     "/:id",
-//     requireAuth,
-//     validate(propertyIdParam),
-//     requirePropertyOwnership,
-//     remove
-// );
-
 export default router;

@@ -3,7 +3,7 @@ import { PrismaClient, Role } from '@prisma/client';
 import { reIssueAccessToken } from "../services/auth.service.js";
 const prisma = new PrismaClient();
 export async function requireAuth(req, res, next) {
-    //console.log(req.headers.authorization)
+    console.log(req.headers.authorization);
     const authHeader = req.headers.authorization || '';
     const accessToken = authHeader.replace(/^Bearer\s/, '');
     const refreshToken = req.headers['x-refresh'];
@@ -12,15 +12,17 @@ export async function requireAuth(req, res, next) {
     }
     const result = verifyAccessToken(accessToken);
     if (result.valid && result.decoded) {
+        const payload = result.decoded;
         // console.log("result is valid and results decoded is ", result.decoded)
         // Type guard to ensure decoded is an object with sub property
-        if (typeof result.decoded === 'object' && result.decoded !== null && 'sub' in result.decoded) {
+        if ('sub' in payload) {
             const user = await prisma.user.findUnique({
-                where: { id: result.decoded.sub }
+                where: { id: payload.sub }
             });
             if (user) {
                 req.user = user;
             }
+            console.log('requireAuth', user);
             return next();
         }
     }
@@ -61,6 +63,7 @@ function isRole(role) {
     return Object.values(Role).includes(role);
 }
 export const requireRole = (...allowed) => (req, res, next) => {
+    console.log(req.user.role, '****************');
     if (!req.user)
         return res.status(401).json({ error: "Unauthenticated" });
     if (isRole(req.user.role) && allowed.includes(req.user.role))

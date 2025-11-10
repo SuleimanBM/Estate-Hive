@@ -29,9 +29,9 @@ export declare const createPropertySchema: z.ZodObject<{
         amenities: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         status: z.ZodOptional<z.ZodEnum<["ACTIVE", "ARCHIVED", "UNDER_MAINTENANCE", "PENDING_APPROVAL"]>>;
     }, "strip", z.ZodTypeAny, {
-        description?: string;
         status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
         title?: string;
+        description?: string;
         price?: number;
         address?: {
             region?: string;
@@ -43,9 +43,9 @@ export declare const createPropertySchema: z.ZodObject<{
         };
         amenities?: string[];
     }, {
-        description?: string;
         status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
         title?: string;
+        description?: string;
         price?: number;
         address?: {
             region?: string;
@@ -59,9 +59,9 @@ export declare const createPropertySchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     body?: {
-        description?: string;
         status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
         title?: string;
+        description?: string;
         price?: number;
         address?: {
             region?: string;
@@ -75,9 +75,9 @@ export declare const createPropertySchema: z.ZodObject<{
     };
 }, {
     body?: {
-        description?: string;
         status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
         title?: string;
+        description?: string;
         price?: number;
         address?: {
             region?: string;
@@ -133,7 +133,7 @@ export declare const searchPropertySchema: z.ZodObject<{
         country?: string;
         page?: number;
         sortBy?: string;
-        sortOrder?: "asc" | "desc";
+        sortOrder?: "desc" | "asc";
     }, {
         limit?: number;
         status?: "ACTIVE" | "ARCHIVED" | "UNDER_MAINTENANCE" | "PENDING_APPROVAL";
@@ -146,7 +146,7 @@ export declare const searchPropertySchema: z.ZodObject<{
         country?: string;
         page?: number;
         sortBy?: string;
-        sortOrder?: "asc" | "desc";
+        sortOrder?: "desc" | "asc";
     }>;
 }, "strip", z.ZodTypeAny, {
     query?: {
@@ -161,7 +161,7 @@ export declare const searchPropertySchema: z.ZodObject<{
         country?: string;
         page?: number;
         sortBy?: string;
-        sortOrder?: "asc" | "desc";
+        sortOrder?: "desc" | "asc";
     };
 }, {
     query?: {
@@ -176,7 +176,7 @@ export declare const searchPropertySchema: z.ZodObject<{
         country?: string;
         page?: number;
         sortBy?: string;
-        sortOrder?: "asc" | "desc";
+        sortOrder?: "desc" | "asc";
     };
 }>;
 export declare const updatePropertySchema: z.ZodObject<{
@@ -188,34 +188,34 @@ export declare const updatePropertySchema: z.ZodObject<{
         amenities: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         status: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
-        description?: string;
         status?: string;
         title?: string;
+        description?: string;
         price?: number;
         address?: string;
         amenities?: string[];
     }, {
-        description?: string;
         status?: string;
         title?: string;
+        description?: string;
         price?: number;
         address?: string;
         amenities?: string[];
     }>;
 }, "strip", z.ZodTypeAny, {
     body?: {
-        description?: string;
         status?: string;
         title?: string;
+        description?: string;
         price?: number;
         address?: string;
         amenities?: string[];
     };
 }, {
     body?: {
-        description?: string;
         status?: string;
         title?: string;
+        description?: string;
         price?: number;
         address?: string;
         amenities?: string[];

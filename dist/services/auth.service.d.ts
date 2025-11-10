@@ -5,18 +5,22 @@ export declare function registerService({ name, email, password, phone }: {
     password: string;
     phone: string;
 }): Promise<{
-    email: string;
-    password: string;
-    resetTokenCode: string | null;
-    name: string;
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    phone: string | null;
-    role: import("@prisma/client").$Enums.Role;
-    isVerified: boolean;
-    resetTokenExpiry: Date | null;
-    scopes: Prisma.JsonValue | null;
+    user: {
+        email: string;
+        password: string;
+        resetTokenCode: string | null;
+        name: string;
+        phone: string | null;
+        id: string;
+        role: import("@prisma/client").$Enums.Role;
+        isVerified: boolean;
+        createdAt: Date;
+        updatedAt: Date;
+        resetTokenExpiry: Date | null;
+        scopes: Prisma.JsonValue | null;
+    };
+    accessToken: string;
+    refreshToken: string;
 }>;
 export declare function verifyEmail(token: string): Promise<{
     alreadyVerified: boolean;
@@ -38,12 +42,12 @@ export declare function loginService({ email, password }: {
         password: string;
         resetTokenCode: string | null;
         name: string;
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
         phone: string | null;
+        id: string;
         role: import("@prisma/client").$Enums.Role;
         isVerified: boolean;
+        createdAt: Date;
+        updatedAt: Date;
         resetTokenExpiry: Date | null;
         scopes: Prisma.JsonValue | null;
     };

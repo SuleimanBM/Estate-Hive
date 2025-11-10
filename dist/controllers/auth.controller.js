@@ -1,8 +1,8 @@
 import * as authService from '../services/auth.service.js';
 export async function registerHandler(req, res) {
     try {
-        const user = await authService.registerService(req.body);
-        return res.status(201).json({ user: { id: user.id, email: user.email, name: user.name } });
+        const { user, accessToken, refreshToken } = await authService.registerService(req.body);
+        return res.status(201).json({ user: { id: user.id, email: user.email, name: user.name }, accessToken, refreshToken });
     }
     catch (err) {
         return res.status(400).json({ error: err.message });

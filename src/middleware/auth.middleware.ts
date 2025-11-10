@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken } from '../utils/jwt.js';
 import { PrismaClient, Role } from '@prisma/client';
 import { reIssueAccessToken } from "../services/auth.service.js"
+import { JwtPayload } from 'jsonwebtoken';
 
 
 const prisma = new PrismaClient();
@@ -9,7 +10,7 @@ const prisma = new PrismaClient();
 
 export async function requireAuth(req: Request, res: Response, next: NextFunction) {
 
-    //console.log(req.headers.authorization)
+    console.log(req.headers.authorization)
 
     const authHeader = req.headers.authorization || '';
     const accessToken = authHeader.replace(/^Bearer\s/, '');
@@ -22,16 +23,18 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
     const result = verifyAccessToken(accessToken);
 
     if (result.valid && result.decoded) {
-       // console.log("result is valid and results decoded is ", result.decoded)
+        const payload = result.decoded as JwtPayload
+        // console.log("result is valid and results decoded is ", result.decoded)
         // Type guard to ensure decoded is an object with sub property
-        if (typeof result.decoded === 'object' && result.decoded !== null && 'sub' in result.decoded) {
+        if ('sub' in payload) {
             const user = await prisma.user.findUnique({
-                where: { id: (result.decoded as { sub: string }).sub }
+                where: { id: payload.sub }
             });
 
             if (user) {
                 req.user = user;
             }
+            console.log('requireAuth', user)
             return next();
         }
     }
@@ -40,7 +43,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
         //console.log("result is expired")
 
         try {
-            const {newAccessToken,newRefreshToken} = await reIssueAccessToken({ refreshToken });
+            const { newAccessToken, newRefreshToken } = await reIssueAccessToken({ refreshToken });
 
             if (newAccessToken) {
                 res.setHeader('x-access-token', newAccessToken);
@@ -85,8 +88,8 @@ function isRole(role: any): role is Role {
 export const requireRole =
     (...allowed: Array<"SUPERADMIN" | "ADMIN" | "MANAGER" | "TENANT">) =>
         (req: Request, res: Response, next: NextFunction) => {
-            console.log(req.user.role)
+            console.log(req.user.role, '****************')
             if (!req.user) return res.status(401).json({ error: "Unauthenticated" });
             if (isRole(req.user.role) && allowed.includes(req.user.role)) return next();
             return res.status(403).json({ error: "Forbidden" });
-};
+        };

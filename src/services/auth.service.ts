@@ -40,7 +40,16 @@ export async function registerService({ name, email, password, phone }: { name: 
 
     await sendEmail(user.email, subject, message, html);
 
-    return user;
+    const accessToken = signAccessToken({ sub: user.id, role: user.role });
+    const refreshToken = signRefreshToken({ sub: user.id });
+
+
+    // Store refresh token in DB for revocation / rotation
+    await prisma.refreshToken.create({
+        data: { userId: user.id, token: refreshToken, revoked: false, expiresAt: null },
+    });
+
+    return {user, accessToken, refreshToken};
 }
 
 export async function verifyEmail(token: string) {
@@ -94,7 +103,6 @@ export async function loginService({ email, password }: { email: string; passwor
 
     return { user, accessToken, refreshToken };
 }
-
 
 export async function reIssueAccessToken({ refreshToken }: { refreshToken: string }) {
     let payload: any

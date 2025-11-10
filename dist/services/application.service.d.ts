@@ -4,11 +4,11 @@ export declare function createApplication(tenantId: string, data: {
     message?: string;
     attachments?: string[];
 }): Promise<{
+    attachments: Prisma.JsonValue | null;
     id: string;
     createdAt: Date;
     updatedAt: Date;
     message: string | null;
-    attachments: Prisma.JsonValue | null;
     status: import("@prisma/client").$Enums.ApplicationStatus;
     leaseId: string | null;
     propertyId: string;
@@ -19,9 +19,9 @@ export declare function getApplicationsByTenant(tenantId: string): Promise<({
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         status: string;
         title: string;
+        description: string | null;
         price: number;
         address: Prisma.JsonValue;
         amenities: Prisma.JsonValue | null;
@@ -29,11 +29,11 @@ export declare function getApplicationsByTenant(tenantId: string): Promise<({
         managerId: string | null;
     };
 } & {
+    attachments: Prisma.JsonValue | null;
     id: string;
     createdAt: Date;
     updatedAt: Date;
     message: string | null;
-    attachments: Prisma.JsonValue | null;
     status: import("@prisma/client").$Enums.ApplicationStatus;
     leaseId: string | null;
     propertyId: string;
@@ -51,11 +51,11 @@ export declare function getApplicationsForManager(managerId: string): Promise<({
         id: string;
     };
 } & {
+    attachments: Prisma.JsonValue | null;
     id: string;
     createdAt: Date;
     updatedAt: Date;
     message: string | null;
-    attachments: Prisma.JsonValue | null;
     status: import("@prisma/client").$Enums.ApplicationStatus;
     leaseId: string | null;
     propertyId: string;
@@ -66,9 +66,9 @@ export declare function getApplicationById(id: string): Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        description: string | null;
         status: string;
         title: string;
+        description: string | null;
         price: number;
         address: Prisma.JsonValue;
         amenities: Prisma.JsonValue | null;
@@ -96,11 +96,11 @@ export declare function getApplicationById(id: string): Promise<{
         unitId: string | null;
     };
 } & {
+    attachments: Prisma.JsonValue | null;
     id: string;
     createdAt: Date;
     updatedAt: Date;
     message: string | null;
-    attachments: Prisma.JsonValue | null;
     status: import("@prisma/client").$Enums.ApplicationStatus;
     leaseId: string | null;
     propertyId: string;
@@ -133,11 +133,11 @@ export declare function denyApplication(applicationId: string, managerId: string
     applicationId: string;
 }>;
 export declare function withdrawApplication(applicationId: string, tenantId: string): Promise<{
+    attachments: Prisma.JsonValue | null;
     id: string;
     createdAt: Date;
     updatedAt: Date;
     message: string | null;
-    attachments: Prisma.JsonValue | null;
     status: import("@prisma/client").$Enums.ApplicationStatus;
     leaseId: string | null;
     propertyId: string;
