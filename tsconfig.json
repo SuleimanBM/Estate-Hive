@@ -10,8 +10,9 @@
     "strict": false,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "skipDefaultLibCheck": true,
   },
 
-  "include": ["src", "src/types"]
+  "include": ["src"]
 }

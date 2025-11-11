@@ -33,7 +33,15 @@ const swaggerSpec = {
     },
 };
 
-
 export function setupSwagger(app: any) {
-    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+        swaggerOptions: {
+            urls: [
+                {
+                    url: `http://54.234.169.13:3000/swagger.json`,
+                    name: 'API Docs',
+                },
+            ],
+        },
+    }));
 }
