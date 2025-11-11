@@ -8,12 +8,11 @@ const swaggerSpec = {
     info: {
         title: "Authentication API",
         version: "1.0.0",
-        description: "Endpoints for user registration, login, token refresh, and password management.",
+        description: "Endpoints for user estate-hive.",
     },
     servers: [
         {
-            url: "http://localhost:3000/api/auth",
-            description: "Local development server",
+            url: process.env.BASE_URL || 'http://localhost:3000',
         },
     ],
     components: {
@@ -34,14 +33,5 @@ const swaggerSpec = {
 };
 
 export function setupSwagger(app: any) {
-    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-        swaggerOptions: {
-            urls: [
-                {
-                    url: `http://54.234.169.13:3000/swagger.json`,
-                    name: 'API Docs',
-                },
-            ],
-        },
-    }));
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }
