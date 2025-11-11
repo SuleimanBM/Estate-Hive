@@ -12,6 +12,7 @@ const swaggerSpec = {
     },
     servers: [
         {
+            // url: process.env.BASE_URL || 'http://localhost:3000',
             url: process.env.BASE_URL || 'http://localhost:3000',
         },
     ],
@@ -26,12 +27,20 @@ const swaggerSpec = {
     },
 
     paths: {
-        ...authDocs,
-        ...propertyDocs,
-        ...applicationDocs,
+        ...addBasePath(authDocs, "/api/auth"),
+        ...addBasePath(propertyDocs, "/api/properties"),
+        ...addBasePath(applicationDocs, "/api/application"),
     },
 };
 
 export function setupSwagger(app: any) {
     app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+}
+
+function addBasePath(docs, basePath) {
+    const newDocs = {};
+    for (const [path, methods] of Object.entries(docs)) {
+        newDocs[`${basePath}${path}`] = methods;
+    }
+    return newDocs;
 }
