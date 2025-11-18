@@ -3,7 +3,7 @@ import { hashPassword, comparePasswords } from '../utils/password.js';
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
 import { stringify } from 'querystring';
 import { sendEmail } from '../utils/email';
-import {generateVerificationToken, verifyVerificationToken} from '../utils/verificationToken';
+import { generateVerificationToken, verifyVerificationToken } from '../utils/verificationToken';
 import { hmacProcess } from '../utils/hmac';
 import { JwtPayload } from 'jsonwebtoken';
 
@@ -11,14 +11,14 @@ import { JwtPayload } from 'jsonwebtoken';
 const prisma = new PrismaClient();
 
 
-export async function registerService({ name, email, password, phone }: { name: string; email: string; password: string; phone: string }) {
+export async function registerService({ name, email, password, phone, role }) {
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) throw new Error('Email already in use');
 
 
     const hashed = await hashPassword(password);
     const user = await prisma.user.create({
-        data: { name, email, password: hashed, phone, role: 'TENANT' },
+        data: { name, email, password: hashed, phone, role },
     });
 
     const token = await generateVerificationToken(user.id);
@@ -49,38 +49,38 @@ export async function registerService({ name, email, password, phone }: { name: 
         data: { userId: user.id, token: refreshToken, revoked: false, expiresAt: null },
     });
 
-    return {user, accessToken, refreshToken};
+    return { user, accessToken, refreshToken };
 }
 
 export async function verifyEmail(token: string) {
-        try {
-            const decoded = await verifyVerificationToken(token) as {
-                userId: string;
-                type: string;
-            };;
+    try {
+        const decoded = await verifyVerificationToken(token) as {
+            userId: string;
+            type: string;
+        };;
 
-            if (decoded.type !== "emailVerification") {
-                throw new Error("Invalid token type");
-            }
-
-            const user = await prisma.user.findUnique({where:{id: decoded.userId}});
-            if (!user) throw new Error("User not found");
-
-            if (user.isVerified) {
-                return { alreadyVerified: true };
-            }
-
-            await prisma.user.update({
-                where:{id: decoded.userId},
-                data: {isVerified: true},
-            })
-            const accessToken = signAccessToken({ sub: user.id, role: user.role });
-            const refreshToken = signRefreshToken({ sub: user.id });
-            return { success: true, accessToken, refreshToken };
-        } catch (error) {
-            throw new Error("Invalid or expired token");
+        if (decoded.type !== "emailVerification") {
+            throw new Error("Invalid token type");
         }
+
+        const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
+        if (!user) throw new Error("User not found");
+
+        if (user.isVerified) {
+            return { alreadyVerified: true };
+        }
+
+        await prisma.user.update({
+            where: { id: decoded.userId },
+            data: { isVerified: true },
+        })
+        const accessToken = signAccessToken({ sub: user.id, role: user.role });
+        const refreshToken = signRefreshToken({ sub: user.id });
+        return { success: true, accessToken, refreshToken };
+    } catch (error) {
+        throw new Error("Invalid or expired token");
     }
+}
 
 export async function loginService({ email, password }: { email: string; password: string }) {
     const user = await prisma.user.findUnique({ where: { email } });
@@ -135,8 +135,8 @@ export async function reIssueAccessToken({ refreshToken }: { refreshToken: strin
     };
 }
 
-export async function logoutService(refreshToken: any) { 
-    const {decoded} = verifyRefreshToken(refreshToken);
+export async function logoutService(refreshToken: any) {
+    const { decoded } = verifyRefreshToken(refreshToken);
     const userId = (decoded as JwtPayload).userId;
     await prisma.refreshToken.deleteMany({
         where: {
@@ -147,7 +147,7 @@ export async function logoutService(refreshToken: any) {
 }
 
 export async function generateResetCode(email: string) {
-    const existingUser = await prisma.user.findUnique({where: {email} });
+    const existingUser = await prisma.user.findUnique({ where: { email } });
     if (!existingUser) {
         throw new Error("User not found");
     }
@@ -155,7 +155,7 @@ export async function generateResetCode(email: string) {
     const resetTokenCode = Math.floor(100000 + Math.random() * 900000)
         .toString()
         .padStart(6, "0");
-    
+
     const htmlContent = `
     <p>Dear ${existingUser.name},</p>
     <p>We received a request to reset your password. Your reset code is:
@@ -163,8 +163,8 @@ export async function generateResetCode(email: string) {
     <p>This code is valid for 10 minutes. If you did not request a password reset, please ignore this email.</p>
     <p>Thank you,<br>estateHive</p>
   `;
-    
-    const info = await sendEmail(existingUser.email, "Password Reset code", " " , htmlContent)
+
+    const info = await sendEmail(existingUser.email, "Password Reset code", " ", htmlContent)
 
 
     if (info.response && info.response.includes("OK")) {
@@ -188,7 +188,7 @@ export async function generateResetCode(email: string) {
 
 
 export async function resetPassword(email: string, resetTokenCode: string, newPassword: string) {
-    const existingUser = await prisma.user.findUnique({where: {email} });
+    const existingUser = await prisma.user.findUnique({ where: { email } });
     if (!existingUser) {
         throw new Error("User not found");
     }
@@ -206,7 +206,7 @@ export async function resetPassword(email: string, resetTokenCode: string, newPa
         throw new Error("Invalid reset code");
     }
 
-    const hashedPassword= await hashPassword(newPassword);
+    const hashedPassword = await hashPassword(newPassword);
     await prisma.user.update({
         where: {
             email,
@@ -222,4 +222,61 @@ export async function resetPassword(email: string, resetTokenCode: string, newPa
     // await existingUser.save();
 
     return true;
+}
+
+
+export async function getUserProfile(userId: string) {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            phone: true,
+            photoUrl: true,
+            address: true,
+            role: true,
+            isVerified: true
+        }
+    });
+
+    if (!user) {
+        throw new Error("User does not exist");
+    }
+
+    return { user }
+}
+
+export async function updateUserProfle(userId: string, updateInfo) {
+
+    const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: updateInfo,
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            phone: true,
+            photoUrl: true,
+            address: true,
+            role: true,
+            isVerified: true
+        }
+    })
+
+    if (!updatedUser) {
+        throw new Error("User does not exist");
+    }
+
+    return {user: updatedUser}
+}
+
+export async function deleteUserProfile(userId: string) {
+    const deletedUser = await prisma.user.delete({ where: { id: userId } })
+
+    if (deletedUser == null) {
+        throw new Error("Could not delete user");
+    }
+    
+    return
 }

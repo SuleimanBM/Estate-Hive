@@ -46,9 +46,11 @@ enum PaymentStatus {
 model User {
   id         String   @id @default(uuid())
   email      String   @unique
-  password   String
+  password   String 
   name       String
   phone      String?
+  photoUrl  String?
+  address   Json? // structured address (street, city, region, country)
   role       Role     @default(TENANT)
   isVerified Boolean  @default(false)
   createdAt  DateTime @default(now())
@@ -58,7 +60,6 @@ model User {
   resetTokenExpiry DateTime?
 
   // relations
-  profile       Profile?
   managedProps  Property[]     @relation("PropertyManager")
   applications  Application[]
   leases        Lease[]        @relation("TenantLeases")
@@ -84,16 +85,14 @@ model RefreshToken {
   @@index([userId])
 }
 
-model Profile {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  bio       String?
-  photoUrl  String?
-  address   Json? // structured address (street, city, region, country)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+// model Profile {
+//   id        String   @id @default(uuid())
+//   bio       String?
+//   photoUrl  String?
+//   address   Json? // structured address (street, city, region, country)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
 
 model Property {
   id          String   @id @default(uuid())

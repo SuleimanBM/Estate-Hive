@@ -1,10 +1,11 @@
-import { object, string, z } from 'zod';
+import { email, object, string, z } from 'zod';
 export const registerSchema = object({
     body: object({
         name: string().min(2),
-        email: string().email(),
+        email: email(),
         password: string().min(8),
         phone: string().optional(),
+        role: z.enum(["SUPERADMIN", "MANAGER", "TENANT"]).default("TENANT")
     })
 });
 export const loginSchema = object({
@@ -20,7 +21,7 @@ export const refreshSchema = object({
 });
 export const forgotPasswordSchema = object({
     body: object({
-        email: string().email(),
+        email: email(),
     }),
 });
 export const resetPasswordSchema = z.object({

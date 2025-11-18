@@ -34,7 +34,6 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
             if (user) {
                 req.user = user;
             }
-            console.log('requireAuth', user)
             return next();
         }
     }
@@ -88,7 +87,6 @@ function isRole(role: any): role is Role {
 export const requireRole =
     (...allowed: Array<"SUPERADMIN" | "ADMIN" | "MANAGER" | "TENANT">) =>
         (req: Request, res: Response, next: NextFunction) => {
-            console.log(req.user.role, '****************')
             if (!req.user) return res.status(401).json({ error: "Unauthenticated" });
             if (isRole(req.user.role) && allowed.includes(req.user.role)) return next();
             return res.status(403).json({ error: "Forbidden" });

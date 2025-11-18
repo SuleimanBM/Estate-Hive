@@ -1,4 +1,4 @@
-import prisma from "../prisma.js";
+import prisma from "../prisma";
 export async function requirePropertyOwnership(req, res, next) {
     const id = req.params.id;
     if (!id)

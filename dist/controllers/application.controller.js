@@ -1,4 +1,4 @@
-import { createApplication, getApplicationById, getApplicationsByTenant, getApplicationsForManager, approveApplication, denyApplication, withdrawApplication } from "../services/application.service.js";
+import { createApplication, getApplicationById, getApplicationsByTenant, getApplicationsForManager, approveApplication, denyApplication, withdrawApplication } from "../services/application.service";
 export async function create(req, res) {
     try {
         const tenantId = req.user.id;

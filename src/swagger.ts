@@ -2,6 +2,8 @@ import swaggerUi from "swagger-ui-express";
 import authDocs from "./swagger-docs/auth"
 import propertyDocs from "./swagger-docs/property"
 import applicationDocs from "./swagger-docs/applications"
+import profileDocs  from "./swagger-docs/profile";
+import superAdminDocs from "./swagger-docs/superadmin";
 
 const swaggerSpec = {
     openapi: "3.1.0",
@@ -28,8 +30,10 @@ const swaggerSpec = {
 
     paths: {
         ...addBasePath(authDocs, "/api/auth"),
+        ...addBasePath(profileDocs, "/api/profile"),
         ...addBasePath(propertyDocs, "/api/properties"),
         ...addBasePath(applicationDocs, "/api/application"),
+        ...addBasePath(superAdminDocs, "/api/super-admin"),
     },
 };
 

@@ -1,10 +1,10 @@
 // src/modules/application/application.routes.ts
 import { Router } from "express";
 import { approve, create, deny, getById, listForManager, listForTenant, withdraw } from "../controllers/application.controller.js";
-import { validate } from "../middleware/validate.middleware.js";
-import { createApplicationSchema, applicationIdParam, approveApplicationSchema } from "../validators/application.validator.js";
-import { requireRole } from "../middleware/auth.middleware.js";
-import { requireManagerOfApplication } from "../middleware/application.middleware.js";
+import { validate } from "../middleware/validate.middleware";
+import { createApplicationSchema, applicationIdParam, approveApplicationSchema } from "../validators/application.validator";
+import { requireRole } from "../middleware/auth.middleware";
+import { requireManagerOfApplication } from "../middleware/application.middleware";
 const router = Router();
 router.post("/create", validate(createApplicationSchema), create);
 router.get("/my", listForTenant);

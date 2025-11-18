@@ -6,15 +6,20 @@ import {
     refreshHandler,
     logoutHandler,
     forgotPassword,
-    resetPassword, } from '../controllers/auth.controller.js';
+    resetPassword,
+    getProfileHandler,
+    updateProfileHandler,
+    deleteUserProfileHandler, } from '../controllers/auth.controller.js';
 import { validate } from '../middleware/validate.middleware.js';
 import {
     registerSchema,
     loginSchema,
     refreshSchema,
     forgotPasswordSchema,
-    resetPasswordSchema
+    resetPasswordSchema,
+    updateProfileSchema
 } from '../validators/auth.validator.js';
+import { requireAuth } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
@@ -32,5 +37,9 @@ router.post("/logout", validate(refreshSchema), logoutHandler);
 router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword);
 router.post("/reset-password", validate(resetPasswordSchema), resetPassword);
 
+//profile management
+router.get("/profile", requireAuth, getProfileHandler)
+router.put("/profile", requireAuth, validate(updateProfileSchema), updateProfileHandler)
+router.delete("/profile", requireAuth, deleteUserProfileHandler)
 
 export default router;

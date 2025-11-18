@@ -1,17 +1,17 @@
 import { PrismaClient } from '@prisma/client';
 import { hashPassword, comparePasswords } from '../utils/password.js';
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
-import { sendEmail } from '../utils/email.js';
-import { generateVerificationToken, verifyVerificationToken } from '../utils/verificationToken.js';
-import { hmacProcess } from '../utils/hmac.js';
+import { sendEmail } from '../utils/email';
+import { generateVerificationToken, verifyVerificationToken } from '../utils/verificationToken';
+import { hmacProcess } from '../utils/hmac';
 const prisma = new PrismaClient();
-export async function registerService({ name, email, password, phone }) {
+export async function registerService({ name, email, password, phone, role }) {
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing)
         throw new Error('Email already in use');
     const hashed = await hashPassword(password);
     const user = await prisma.user.create({
-        data: { name, email, password: hashed, phone, role: 'TENANT' },
+        data: { name, email, password: hashed, phone, role },
     });
     const token = await generateVerificationToken(user.id);
     const subject = 'Verify Your Email Address';
@@ -178,5 +178,41 @@ export async function resetPassword(email, resetTokenCode, newPassword) {
     // existingUser.resetTokenExpiry = undefined;
     // await existingUser.save();
     return true;
+}
+export async function getUserProfile(userId) {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            phone: true,
+            photoUrl: true,
+            address: true,
+            role: true,
+            isVerified: true
+        }
+    });
+    if (!user) {
+        throw new Error("User does not exist");
+    }
+    return { user };
+}
+export async function updateUserProfle(userId, updateInfo) {
+    const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: updateInfo
+    });
+    if (!updatedUser) {
+        throw new Error("User does not exist");
+    }
+    return { user: updatedUser };
+}
+export async function deleteUserProfile(userId) {
+    const deletedUser = await prisma.user.delete({ where: { id: userId } });
+    if (deletedUser == null) {
+        throw new Error("Could not delete user");
+    }
+    return;
 }
 //# sourceMappingURL=auth.service.js.map
