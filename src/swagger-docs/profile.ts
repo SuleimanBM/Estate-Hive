@@ -1,7 +1,7 @@
 export const profileDocs = {
     "": {
         get: {
-            tags: ["Auth"],
+            tags: ["Profile"],
             summary: "Get user profile",
             description: "Retrieve the profile details of the currently authenticated user.",
             security: [{ bearerAuth: [] }],
@@ -35,7 +35,7 @@ export const profileDocs = {
         },
 
         put: {
-            tags: ["Auth"],
+            tags: ["Profile"],
             summary: "Update user profile",
             description: "Update the profile information of the authenticated user.",
             security: [{ bearerAuth: [] }],
@@ -87,7 +87,7 @@ export const profileDocs = {
         },
 
         delete: {
-            tags: ["Auth"],
+            tags: ["Profile"],
             summary: "Delete user profile",
             description: "Permanently delete the authenticated user's account.",
             security: [{ bearerAuth: [] }],

@@ -15,6 +15,7 @@ const authDocs = {
                                 email: { type: "string", example: "john@example.com" },
                                 password: { type: "string", example: "strongPassword123" },
                                 phone: { type: "string", example: "+233123456789" },
+                                role: { type: "string", example: "TENANT"}
                             },
                             required: ["name", "email", "password"],
                         },
