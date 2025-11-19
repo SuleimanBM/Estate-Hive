@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { hashPassword, comparePasswords } from '../utils/password.js';
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
-import { sendEmail } from '../utils/email';
-import { generateVerificationToken, verifyVerificationToken } from '../utils/verificationToken';
-import { hmacProcess } from '../utils/hmac';
+import { sendEmail } from '../utils/email.js';
+import { generateVerificationToken, verifyVerificationToken } from '../utils/verificationToken.js';
+import { hmacProcess } from '../utils/hmac.js';
 const prisma = new PrismaClient();
 export async function registerService({ name, email, password, phone, role }) {
     const existing = await prisma.user.findUnique({ where: { email } });
@@ -201,7 +201,17 @@ export async function getUserProfile(userId) {
 export async function updateUserProfle(userId, updateInfo) {
     const updatedUser = await prisma.user.update({
         where: { id: userId },
-        data: updateInfo
+        data: updateInfo,
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            phone: true,
+            photoUrl: true,
+            address: true,
+            role: true,
+            isVerified: true
+        }
     });
     if (!updatedUser) {
         throw new Error("User does not exist");

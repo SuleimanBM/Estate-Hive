@@ -21,4 +21,4 @@ router.delete("/leases/:leaseId", deleteLease);
 router.get("/payments", getAllPayments);
 router.put("/payments/:paymentId", overridePayment);
 export default router;
-//# sourceMappingURL=super.admin.routes.js.map
+//# sourceMappingURL=superadmin.routes.js.map

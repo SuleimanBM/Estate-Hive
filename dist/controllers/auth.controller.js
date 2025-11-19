@@ -112,7 +112,7 @@ export async function updateProfileHandler(req, res) {
         const userId = req.user?.id;
         const updateInfo = req.body;
         const updatedUser = await authService.updateUserProfle(userId, updateInfo);
-        return res.status(200).json({ user: updatedUser });
+        return res.status(200).json({ updatedUser });
     }
     catch (error) {
         return res.status(500).json({

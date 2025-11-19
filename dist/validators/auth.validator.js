@@ -31,4 +31,11 @@ export const resetPasswordSchema = z.object({
         newPassword: string().min(6),
     }),
 });
+export const updateProfileSchema = z.object({
+    name: string().min(2).optional(),
+    email: email().optional(),
+    phone: string().optional(),
+    photoUrl: string().optional(),
+    address: string().optional(),
+});
 //# sourceMappingURL=auth.validator.js.map

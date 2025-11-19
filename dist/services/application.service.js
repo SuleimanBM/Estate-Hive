@@ -1,4 +1,4 @@
-import { notifyManagerNewApplication, notifyTenantApplicationUpdated } from "../utils/application";
+import { notifyManagerNewApplication, notifyTenantApplicationUpdated } from "../utils/application.js";
 import { PrismaClient, Prisma } from "@prisma/client";
 const prisma = new PrismaClient();
 // Tenant creates an application for a property
